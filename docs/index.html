@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>DQ10ランカー分析サイト(α)</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="DQ10ランカー分析サイト" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yumedqx.web.fc2.com/rankanalytics.html" />
+  <meta property="og:image" content="https://yumedqx.web.fc2.com/res/checklist.png" />
+  <meta property="og:site_name"  content="https://yumedqx.web.fc2.com/rankanalytics.html" />
+  <meta property="og:description" content="DQ10の各種ランキングの分析結果を表示するサイトです" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@r0_ppy" />
+
+  <link href="css/bootstrap3.min.css" rel="stylesheet">
+  <link href="css/c3.min.css" rel="stylesheet">
+  <link href="css/rankanalytics.css" rel="stylesheet">
+  <script type='text/javascript' src='js/pako.min.js'></script>
+  <script type='text/javascript' src='js/jquery1.min.js'></script>
+  <script type='text/javascript' src='js/d3.min.js'></script>
+  <script type='text/javascript' src='js/c3.min.js'></script>
+  <script type='text/javascript' src='js/bootstrap3.min.js'></script>
+  <script type='text/javascript' src='js/rankanalytics.js'></script>
+
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#dtMenu">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">DQ10ランカー分析(α)</a>
+      </div>
+      <div class="navbar-collapse collapse" id="dtMenu">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">概要</a></li>
+          <li><a href="#">キャラ別</a></li>
+          <li><a href="#">累計</a></li>
+          <li><a href="#">差分</a></li>
+          <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+              aria-expanded="false">
+              レース <span class="caret"></span>
+            </a>
+            <ul id="" class="dropdown-menu" role="menu">
+              <li role="presentation" style="display: none;"><a href="#"></a></li>
+            </ul>
+          </li>
+          <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+              aria-expanded="false">
+              ラウンド <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <li role="presentation" style="display: none;"><a href="#"></a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 text-left ra-title">
+        第5回スライムレース
+      </div>
+      <div class="col-xs-12 col-sm-6 text-right">
+        <span class="ra-timestamp">2020/1/27 4:00:00</span>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default glyphicon glyphicon-chevron-left"></button>
+          <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right"></button>
+        </div>
+      </div>
+    </div>
+    <ul class="nav nav-tabs nav-justified">
+      <li role="presentation" class="active"><a href="#">最大ランキング</a></li>
+      <li role="presentation"><a href="#">最小ランキング</a></li>
+    </ul>
+    <div class="row">
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <div class="text-center">スコア境界値</div>
+        <table class="table">
+          <tr>
+            <th>境界</th>
+            <th>最新</th>
+            <th>最終日予測</th>
+          </tr>
+          <tr class="ra-db-gold" id="border0">
+            <td>1位境界</td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+          <tr class="ra-db-silver" id="border1">
+            <td>10位境界</td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+          <tr class="ra-db-bronze" id="border2">
+            <td>100位境界</td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div class="text-center">ボーダーライン遷移グラフ</div>
+        <div id="border"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <div class="text-center">順位遷移グラフ</div>
+        <div id="rank"></div>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div class="text-center">スコア遷移グラフ</div>
+        <div id="point"></div>
+      </div>
+    </div>
+  </div>
+  <!--
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-xs-12 col-sm-6">
+    <div class="text-center">
+     累積スコアグラフ
+    </div>
+     <table class="table">
+      <tr>
+       <th>順位</th><th>名前</th><th>スコア</th>
+      </tr>
+      <tr>
+       <td>1</td><td>ああああ</td><td>300000</td>
+      </tr>
+      <tr>
+       <td>2</td><td>いいいい</td><td>290000</td>
+      </tr>
+      <tr>
+       <td>3</td><td>うううう</td><td>280000</td>
+      </tr>
+      <tr>
+       <td>4</td><td>ええええ</td><td>270000</td>
+      </tr>
+      <tr>
+       <td>5</td><td>おおおお</td><td>260000</td>
+      </tr>
+      <tr>
+       <td>6</td><td>ああああ</td><td>250000</td>
+      </tr>
+      <tr>
+       <td>7</td><td>いいいい</td><td>240000</td>
+      </tr>
+      <tr>
+       <td>8</td><td>うううう</td><td>230000</td>
+      </tr>
+      <tr>
+       <td>9</td><td>ええええ</td><td>220000</td>
+      </tr>
+      <tr>
+       <td>10</td><td>おおおお</td><td>210000</td>
+      </tr>
+     </table>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+    <div class="text-center">
+     増分スコアランキング
+    </div>
+     <table class="table">
+      <tr>
+       <th>順位</th><th>名前</th><th>スコア</th>
+      </tr>
+      <tr>
+       <td>1</td><td>ああああ</td><td>30000</td>
+      </tr>
+      <tr>
+       <td>2</td><td>いいいい</td><td>29000</td>
+      </tr>
+      <tr>
+       <td>3</td><td>うううう</td><td>28000</td>
+      </tr>
+      <tr>
+       <td>4</td><td>ええええ</td><td>27000</td>
+      </tr>
+      <tr>
+       <td>5</td><td>おおおお</td><td>26000</td>
+      </tr>
+      <tr>
+       <td>6</td><td>ああああ</td><td>25000</td>
+      </tr>
+      <tr>
+       <td>7</td><td>いいいい</td><td>24000</td>
+      </tr>
+      <tr>
+       <td>8</td><td>うううう</td><td>23000</td>
+      </tr>
+      <tr>
+       <td>9</td><td>ええええ</td><td>22000</td>
+      </tr>
+      <tr>
+       <td>10</td><td>おおおお</td><td>21000</td>
+      </tr>
+     </table>
+    </div>
+   </div>
+  </div>
+  -->
+</body>
+
+</html>
