@@ -20,7 +20,7 @@ var selection = {
 $(function () {
 
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://yumedqx.web.fc2.com/json/slimerace5.json.gz?v='+Math.random().toString(32).substring(2), true);
+  xhr.open('GET', 'json/slimerace5.json.gz?v='+Math.random().toString(32).substring(2), true);
   xhr.responseType = 'arraybuffer';
   xhr.onload = function () {
 
@@ -32,9 +32,9 @@ $(function () {
     var DISPLAY_RANK = 20;
     var DISPLAY_RANK_LOWERLIMIT = 30;
     var DISPLAY_RACE_END = 60;
-    var DISPLAY_BORDER = [0, 9, 199];
-    var DISPLAY_BORDER_NAME = ['1位境界', '10位境界', '200位境界'];
-    var DISPLAY_BORDER_NAME_PREDICTION = ['1位予測', '10位予測', '200位予測'];
+    var DISPLAY_BORDER = [0, 9, 99];
+    var DISPLAY_BORDER_NAME = ['1位境界', '10位境界', '100位境界'];
+    var DISPLAY_BORDER_NAME_PREDICTION = ['1位予測', '10位予測', '100位予測'];
 
 
     var rankColumns = new Array(DISPLAY_RANK);
