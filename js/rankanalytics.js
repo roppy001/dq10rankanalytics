@@ -53,7 +53,7 @@ var selection = {
   "round" : 5,
   "race" : "slimerace5",
   "subrace" : 0,
-  "targetIndex" : 10,
+  "targetIndex" : 0,
   "targetIndexInterval" : 10
 };
 
@@ -72,6 +72,9 @@ function displayDashboard(){
     alert('表示領域が不正です');
     return;
   }  
+
+  $('#displayRankString').text(
+    (selection.targetIndex+1) + '位～' + (selection.targetIndex+rankLength) + '位');
 
   // 各キャラのデータを格納する配列を作成
   var rankColumns = new Array(rankLength);
@@ -216,6 +219,23 @@ function calculate(){
 
 }
 
+function initEventHandler(){
+  $('#rankIndexLeft').on('click',function(){
+    selection.targetIndex -= selection.targetIndexInterval;
+    selection.targetIndex = Math.max(selection.targetIndex,0);
+    display();
+  });
+
+  $('#rankIndexRight').on('click',function(){
+    selection.targetIndex += selection.targetIndexInterval;
+    selection.targetIndex = Math.min(selection.targetIndex,
+      RACE_CONFIG_MAP[selection.race].rankBorder
+      -selection.targetIndexInterval
+      -Math.floor(DISPLAY_RANK_LOWER_INTERVAL/selection.targetIndexInterval)*selection.targetIndexInterval);
+    display();
+  });
+}
+
 function reloadRaceData(){
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'json/'+ selection.race + '.json.gz?v='+Math.random().toString(32).substring(2), true);
@@ -233,5 +253,6 @@ function reloadRaceData(){
 }
 
 $(function () {
+  initEventHandler();
   reloadRaceData();
 });
