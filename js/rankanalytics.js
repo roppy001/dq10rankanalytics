@@ -100,7 +100,7 @@ function displayDashboard(){
     timeIndexMapper[i] = Math.min(j,currentPeriod.length - 1);
   }
 
-  for (var i = 0; i < rankLength; i++) {
+  for (var i = 0,nameMap = {}; i < rankLength; i++) {
     rankColumns[i] = new Array(currentPeriod.length + 1);
     rankColumns[i].fill(null, 1);
 
@@ -108,8 +108,18 @@ function displayDashboard(){
     pointColumns[i].fill(null, 1);
 
     displayIds[i] = snapshotList[snapshotList.length - 1].rankList[selection.targetIndex +i].id;
-    rankColumns[i][0] = snapshotList[snapshotList.length - 1].rankList[selection.targetIndex +i].name;
-    pointColumns[i][0] = snapshotList[snapshotList.length - 1].rankList[selection.targetIndex +i].name;
+
+    var name = snapshotList[snapshotList.length - 1].rankList[selection.targetIndex +i].name
+
+    if(name in nameMap){
+      nameMap[name] = nameMap[name] + 1;
+      name = name + nameMap[name];
+    } else {
+      nameMap[name] = 1;
+    }
+
+    rankColumns[i][0] = name;
+    pointColumns[i][0] = name;
   }
 
   for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
