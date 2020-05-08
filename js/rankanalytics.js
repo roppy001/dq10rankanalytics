@@ -134,37 +134,41 @@ function displayDashboard(){
     }
   }
 
-/*
-  var borderColumns = new Array(DISPLAY_BORDER.length * 2);
+
+  var borderColumns = new Array(raceConfig.borders.length * 2);
   var borderRegions = {};
 
-  for (var i = 0; i < DISPLAY_BORDER.length; i++) {
-    borderColumns[i] = new Array(DISPLAY_RACE_END + 2);
-    borderColumns[i + 3] = new Array(DISPLAY_RACE_END + 2);
+  for (var i = 0; i < raceConfig.borders.length; i++) {
+    borderColumns[i] = new Array(allPeriod.length + 1);
+    borderColumns[i + 3] = new Array(allPeriod.length + 1);
 
-    borderColumns[i][0] = DISPLAY_BORDER_NAME[i];
-    borderColumns[i + 3][0] = DISPLAY_BORDER_NAME_PREDICTION[i];
+    borderColumns[i][0] = raceConfig.borders[i].borderName;
+    borderColumns[i + 3][0] = raceConfig.borders[i].predictionName;
+
+    borderColumns[i].fill(null,1);
+    borderColumns[i + 3].fill(null,1);
+
+    for (var j = 0; j < snapshotList.length; j++) {
+      borderColumns[i][timeIndexMapper[j] + 1] = snapshotList[j].rankList[raceConfig.borders[i].index].point;
+    }
+
     borderColumns[i][1] = 0;
     borderColumns[i + 3][1] = 0;
 
-    for (var j = 0; j < snapshotList.length; j++) {
-      borderColumns[i][j + 2] = snapshotList[j].rankList[DISPLAY_BORDER[i]].point;
-      borderColumns[i + 3][j + 2] = null;
+    var timeIndex = timeIndexMapper[snapshotList.length - 1];
+
+    if(timeIndex > 0){
+      var averagePointDiff = snapshotList[snapshotList.length - 1].rankList[raceConfig.borders[i].index].point / timeIndex;
+
+      borderColumns[i + 3][allPeriod.length] = Math.floor(averagePointDiff * (allPeriod.length - 1));
+
+      $("#border" + i + " .borderName").text(raceConfig.borders[i].borderName);
+      $("#border" + i + " .latest").text(snapshotList[snapshotList.length - 1].rankList[raceConfig.borders[i].index].point.toLocaleString());
+      $("#border" + i + " .prediction").text(borderColumns[i + 3][allPeriod.length].toLocaleString());
     }
 
-    var averagePointDiff = snapshotList[snapshotList.length - 1].rankList[DISPLAY_BORDER[i]].point / snapshotList.length;
-
-    for (var j = snapshotList.length; j < DISPLAY_RACE_END; j++) {
-      borderColumns[i][j + 2] = null;
-      borderColumns[i + 3][j + 2] = null;
-    }
-    borderColumns[i + 3][DISPLAY_RACE_END + 1] = Math.floor(averagePointDiff * DISPLAY_RACE_END);
-
-    borderRegions[DISPLAY_BORDER_NAME_PREDICTION[i]] = [{ 'start': 0 }];
-
-    $("#border" + i + " .latest").text(snapshotList[snapshotList.length - 1].rankList[DISPLAY_BORDER[i]].point.toLocaleString());
-    $("#border" + i + " .prediction").text(borderColumns[i + 3][DISPLAY_RACE_END + 1].toLocaleString());
-  }*/
+    borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': 0 }];
+  }
 
 
   var top = c3.generate({
@@ -186,7 +190,6 @@ function displayDashboard(){
     }
   });
 
-  /*
   var border = c3.generate({
     bindto: '#border',
     data: {
@@ -196,7 +199,7 @@ function displayDashboard(){
     line: {
       connectNull: true
     }
-  });*/
+  });
 }
 
 function display(){
