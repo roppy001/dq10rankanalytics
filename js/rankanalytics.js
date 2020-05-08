@@ -167,16 +167,23 @@ function displayDashboard(){
       $("#border" + i + " .prediction").text(borderColumns[i + 3][allPeriod.length].toLocaleString());
     }
 
-    borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': 0 }];
+    borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': raceConfig.beginTime }];
   }
 
 
   var top = c3.generate({
     bindto: '#rank',
     data: {
-      columns: rankColumns
+      x : 'x',
+      columns: [['x'].concat(currentPeriod)].concat(rankColumns)
     },
     axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%m/%d %H'
+        }
+      },
       y: {
         inverted: true
       }
@@ -186,19 +193,38 @@ function displayDashboard(){
   var point = c3.generate({
     bindto: '#point',
     data: {
-      columns: pointColumns
+      x : 'x',
+      columns: [['x'].concat(currentPeriod)].concat(pointColumns)
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%m/%d %H'
+        }
+      }
     }
   });
 
   var border = c3.generate({
     bindto: '#border',
     data: {
-      columns: borderColumns,
+      x : 'x',
+      columns: [['x'].concat(allPeriod)].concat(borderColumns),
       regions: borderRegions
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%m/%d %H'
+        }
+      }
     },
     line: {
       connectNull: true
     }
+
   });
 }
 
