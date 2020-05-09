@@ -128,7 +128,8 @@ function displayDashboard(){
       var currentId = snapshotList[snapshotIndex].rankList[i].id;
       var columnIndex = displayIds.indexOf(currentId);
       if (columnIndex != -1) {
-        rankColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = snapshotList[snapshotIndex].rankList[i].rank;
+        // グラフを逆順に並べる方法として、順位の値はマイナスでグラフを生成し、表示時に再度プラスに置き換える
+        rankColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = -snapshotList[snapshotIndex].rankList[i].rank;
         pointColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = snapshotList[snapshotIndex].rankList[i].point;
       }
     }
@@ -185,7 +186,9 @@ function displayDashboard(){
         }
       },
       y: {
-        inverted: true
+        tick: {
+          format: function (x) { return -x; }
+        }
       }
     }
   });
@@ -202,6 +205,11 @@ function displayDashboard(){
         tick: {
           format: '%m/%d %H'
         }
+      }
+    },
+    tooltip: {
+      format: {
+        value:  function (value, ratio, id, index) { return -value; }
       }
     }
   });
