@@ -53,8 +53,8 @@ var selection = {
   "round" : 5,
   "race" : "slimerace5",
   "subrace" : 0,
-  "targetIndex" : 0,
-  "targetIndexInterval" : 10
+  "targetRank" : 1,
+  "targetRankInterval" : 10
 };
 
 var currentPeriod;
@@ -62,11 +62,36 @@ var allPeriod;
 
 function displayDashboard(){
 
-  
   var raceConfig = RACE_CONFIG_MAP[selection.race];
 
+  var snapshotList = data.subraceList[selection.subrace].snapshotList;
+
+  // 表示最下位ランクを計算
+  var endRank=Math.min(
+    selection.targetRank + selection.targetRankInterval + TARGET_RANK_LOWER_INTERVAL -1,
+    raceConfig.rankBorder);
+
   // インデックスを超えないよう、表示キャラ数を計算
-  var rankLength = Math.min(selection.targetIndex + selection.targetIndexInterval + TARGET_RANK_LOWER_INTERVAL, raceConfig.rankBorder) - selection.targetIndex;
+  // 最新snapshotでのrankListの開始インデックスを計算
+  var startIndex;
+  var latestSnapshot = snapshotList[snapshotList.length-1];
+  for(startIndex = 0;startIndex < latestSnapshot.rankList.length;startIndex++){
+    if(latestSnapshot.rankList[startIndex].rank >= selection.targetRank){
+      break;
+    }
+  }
+
+  // 最新snapshotでのrankListの終了インデックスに1足した値を計算
+  var endIndex;
+  for(endIndex = startIndex;endIndex < latestSnapshot.rankList.length;endIndex++){
+    if(latestSnapshot.rankList[endIndex].rank >= endRank){
+      break;
+    }
+  }
+  endIndex = Math.min(endIndex + 1, latestSnapshot.rankList.length);
+
+  // 表示数を計算
+  var rankLength = endIndex - startIndex;
 
   if(rankLength <=0){
     alert('表示領域が不正です');
@@ -74,7 +99,7 @@ function displayDashboard(){
   }  
 
   $('#displayRankString').text(
-    (selection.targetIndex+1) + '位～' + (selection.targetIndex+rankLength) + '位');
+    selection.targetRank + '位～' + endRank + '位');
 
   // 各キャラのデータを格納する配列を作成
   var rankColumns = new Array(rankLength);
@@ -83,13 +108,15 @@ function displayDashboard(){
   // 最新時刻のランキング者を表示対象として記憶する
   var displayIds = new Array(rankLength);
 
+  // データの存在しない時刻を判定するための配列
+  var emptyTimes = new Array(currentPeriod.length);
+  emptyTimes.fill(true);
+  emptyTimes[0] = false;
 
-  var snapshotList = data.subraceList[selection.subrace].snapshotList;
+  // スナップショットのIndexからallPetiodの時刻Indexを逆引きする配列を作成
+  var timeIndexMapperAll = new Array(snapshotList.length);
 
-  // スナップショットのインデックスから時刻インデックスを逆引きできるようにする
-  // 欠けている時刻がある場合、nullデータのままとする。
-  var timeIndexMapper = new Array(snapshotList.length);
-
+  // 欠けている時刻を判定する。
   for (var i = 0,j = 0; i < snapshotList.length; i++) {
     var snapshotTime = new Date(snapshotList[i].timeString);
 
@@ -97,19 +124,45 @@ function displayDashboard(){
       j++;
     }
 
-    timeIndexMapper[i] = Math.min(j,currentPeriod.length - 1);
+    var k=Math.min(j,currentPeriod.length - 1);
+    timeIndexMapperAll[i]=k;
+    emptyTimes[k]=false;
   }
 
+  // 欠けている時刻を除去した新たなX軸データを作成する
+  var modifiedCurrentPeriod = currentPeriod.slice();
+
+  for (var i = modifiedCurrentPeriod.length-1;i>=0;i--){
+    if(emptyTimes[i]){
+      modifiedCurrentPeriod.splice(i,1);
+    }
+  }
+
+  // スナップショットのIndexからmodifiedCurrentPeriodの時刻Indexを逆引きする配列を作成
+  var timeIndexMapper = new Array(snapshotList.length);
+
+  for (var i = 0,j = 0; i < snapshotList.length; i++) {
+    var snapshotTime = new Date(snapshotList[i].timeString);
+
+    while(j < modifiedCurrentPeriod.length && modifiedCurrentPeriod[j] < snapshotTime){
+      j++;
+    }
+
+    timeIndexMapper[i] = Math.min(j,modifiedCurrentPeriod.length - 1);
+  }
+  
+
+
   for (var i = 0,nameMap = {}; i < rankLength; i++) {
-    rankColumns[i] = new Array(currentPeriod.length + 1);
+    rankColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
     rankColumns[i].fill(null, 1);
 
-    pointColumns[i] = new Array(currentPeriod.length + 1);
+    pointColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
     pointColumns[i].fill(null, 1);
 
-    displayIds[i] = snapshotList[snapshotList.length - 1].rankList[selection.targetIndex +i].id;
+    displayIds[i] = snapshotList[snapshotList.length - 1].rankList[startIndex +i].id;
 
-    var name = snapshotList[snapshotList.length - 1].rankList[selection.targetIndex +i].name
+    var name = snapshotList[snapshotList.length - 1].rankList[startIndex +i].name;
 
     if(name in nameMap){
       nameMap[name] = nameMap[name] + 1;
@@ -123,18 +176,22 @@ function displayDashboard(){
   }
 
   for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
-    var endRank = Math.min(selection.targetIndex + rankLength + DISPLAY_RANK_LOWER_INTERVAL,raceConfig.rankBorder);
-    for (var i = Math.max(selection.targetIndex - DISPLAY_RANK_UPPER_INTERVAL,0); i < endRank; i++) {
+
+    for (var i = 0; i < snapshotList[snapshotIndex].rankList.length; i++) {
       var currentId = snapshotList[snapshotIndex].rankList[i].id;
       var columnIndex = displayIds.indexOf(currentId);
       if (columnIndex != -1) {
-        // グラフを逆順に並べる方法として、順位の値はマイナスでグラフを生成し、表示時に再度プラスに置き換える
-        rankColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = -snapshotList[snapshotIndex].rankList[i].rank;
         pointColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = snapshotList[snapshotIndex].rankList[i].point;
+
+        //ランクは、特定の領域内にある場合のみ表示する
+        if(snapshotList[snapshotIndex].rankList[i].rank >= selection.targetRank -DISPLAY_RANK_UPPER_INTERVAL
+          && snapshotList[snapshotIndex].rankList[i].rank <= endRank +DISPLAY_RANK_LOWER_INTERVAL){
+          // グラフを逆順に並べる方法として、順位の値はマイナスでグラフを生成し、表示時に再度プラスに置き換える
+          rankColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = -snapshotList[snapshotIndex].rankList[i].rank;
+        }
       }
     }
   }
-
 
   var borderColumns = new Array(raceConfig.borders.length * 2);
   var borderRegions = {};
@@ -150,13 +207,13 @@ function displayDashboard(){
     borderColumns[i + 3].fill(null,1);
 
     for (var j = 0; j < snapshotList.length; j++) {
-      borderColumns[i][timeIndexMapper[j] + 1] = snapshotList[j].rankList[raceConfig.borders[i].index].point;
+      borderColumns[i][timeIndexMapperAll[j] + 1] = snapshotList[j].rankList[raceConfig.borders[i].index].point;
     }
 
     borderColumns[i][1] = 0;
     borderColumns[i + 3][1] = 0;
 
-    var timeIndex = timeIndexMapper[snapshotList.length - 1];
+    var timeIndex = timeIndexMapperAll[snapshotList.length - 1];
 
     if(timeIndex > 0){
       var averagePointDiff = snapshotList[snapshotList.length - 1].rankList[raceConfig.borders[i].index].point / timeIndex;
@@ -176,7 +233,7 @@ function displayDashboard(){
     bindto: '#rank',
     data: {
       x : 'x',
-      columns: [['x'].concat(currentPeriod)].concat(rankColumns)
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat(rankColumns)
     },
     axis: {
       x: {
@@ -197,7 +254,7 @@ function displayDashboard(){
     bindto: '#point',
     data: {
       x : 'x',
-      columns: [['x'].concat(currentPeriod)].concat(pointColumns)
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat(pointColumns)
     },
     axis: {
       x: {
@@ -263,17 +320,17 @@ function calculate(){
 
 function initEventHandler(){
   $('#rankIndexLeft').on('click',function(){
-    selection.targetIndex -= selection.targetIndexInterval;
-    selection.targetIndex = Math.max(selection.targetIndex,0);
+    selection.targetRank -= selection.targetRankInterval;
+    selection.targetRank = Math.max(selection.targetRank,1);
     display();
   });
 
   $('#rankIndexRight').on('click',function(){
-    selection.targetIndex += selection.targetIndexInterval;
-    selection.targetIndex = Math.min(selection.targetIndex,
-      RACE_CONFIG_MAP[selection.race].rankBorder
-      -selection.targetIndexInterval
-      -Math.floor(DISPLAY_RANK_LOWER_INTERVAL/selection.targetIndexInterval)*selection.targetIndexInterval);
+    selection.targetRank += selection.targetRankInterval;
+    selection.targetRank = Math.min(selection.targetRank,
+      RACE_CONFIG_MAP[selection.race].rankBorder+1
+      -selection.targetRankInterval
+      -Math.floor(DISPLAY_RANK_LOWER_INTERVAL/selection.targetRankInterval)*selection.targetRankInterval);
     display();
   });
 }
