@@ -72,19 +72,13 @@
         第5回スライムレース
       </div>
       <div class="col-xs-12 col-sm-6 text-right">
-        <span class="ra-timestamp">2020/1/27 4:00:00</span>
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-default glyphicon glyphicon-chevron-left"></button>
-          <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right"></button>
-        </div>
+        <span class="ra-timestamp" id="currentTime"></span>
       </div>
     </div>
     <ul class="nav nav-tabs nav-justified">
       <li role="presentation" class="active"><a href="#">最大ランキング</a></li>
       <li role="presentation"><a href="#">最小ランキング</a></li>
     </ul>
-    <div class="row">
-    </div>
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <div class="text-center">スコア境界値</div>
@@ -95,17 +89,22 @@
             <th>最終日予測</th>
           </tr>
           <tr class="ra-db-gold" id="border0">
-            <td>1位境界</td>
+            <td class="borderName"></td>
             <td class="latest"></td>
             <td class="prediction"></td>
           </tr>
           <tr class="ra-db-silver" id="border1">
-            <td>10位境界</td>
+            <td class="borderName"></td>
             <td class="latest"></td>
             <td class="prediction"></td>
           </tr>
           <tr class="ra-db-bronze" id="border2">
-            <td>100位境界</td>
+            <td class="borderName"></td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+          <tr id="border3">
+            <td class="borderName"></td>
             <td class="latest"></td>
             <td class="prediction"></td>
           </tr>
@@ -116,6 +115,14 @@
         <div id="border"></div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 text-left" id="displayRankString">
+      </div>
+      <div class="col-xs-12 col-sm-6 text-right">
+        <button type="button" class="btn btn-default glyphicon glyphicon-chevron-left" id="rankIndexLeft"></button>
+        <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right" id="rankIndexRight"></button>
+      </div>
+  </div>
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <div class="text-center">順位遷移グラフ</div>
