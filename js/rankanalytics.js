@@ -206,11 +206,6 @@ function displayDashboard(){
           format: '%m/%d %H'
         }
       }
-    },
-    tooltip: {
-      format: {
-        value:  function (value, ratio, id, index) { return -value; }
-      }
     }
   });
 
