@@ -50,16 +50,16 @@
               aria-expanded="false">
               レース <span class="caret"></span>
             </a>
-            <ul id="" class="dropdown-menu" role="menu">
-              <li role="presentation" style="display: none;"><a href="#"></a></li>
+            <ul id="raceSelection" class="dropdown-menu" role="menu">
+              <li role="presentation" class="ra-template"><a href="#"></a></li>
             </ul>
           </li>
           <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
               aria-expanded="false">
               ラウンド <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu" role="menu">
-              <li role="presentation" style="display: none;"><a href="#"></a></li>
+            <ul class="dropdown-menu" role="menu" id="roundSelection">
+              <li role="presentation" class="ra-template"><a href="#"></a></li>
             </ul>
           </li>
         </ul>
@@ -68,8 +68,7 @@
   </nav>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-12 col-sm-6 text-left ra-title">
-        第5回スライムレース
+      <div class="col-xs-12 col-sm-6 text-left ra-title" id="raceTitle">
       </div>
       <div class="col-xs-12 col-sm-6 text-right">
         <span class="ra-timestamp" id="currentTime"></span>
