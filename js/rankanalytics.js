@@ -13,7 +13,8 @@ var RACE_TYPE_CONFIG_MAP = {
     name : 'カジノレイド',
     rounds : [
       {id : 2,name : '第2回'},
-      {id : 1,name : '第1回'}]
+      {id : 1,name : '第1回'},
+      {id : 3,name : 'デモ用'}]
   },
   fishing : {
     name : 'フィッシングコンテスト',
@@ -136,6 +137,16 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_LINEAR,
     rankBorder : 100
   },
+  "casinoraid3" : {
+    title : 'デモ用データ(期間2倍化)',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
+    beginTime : new Date(2020,4,4,20,00),
+    endTime : new Date(2020,4,14,20,00),
+    subraceNames : ['ポーカー','スロット','ルーレット'],
+    borders : RACE_10_100_RANGE,
+    rankBorder : 100
+  },
   "casinoraid2" : {
     title : '第2回カジノレイド',
     predictionType : PREDICTION_TYPE_RANGE,
@@ -156,22 +167,22 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
+  "fishing5" : {
+    title : 'デモ用データ(期間2倍化)',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2020,4,4,20,00),
+    endTime : new Date(2020,4,14,20,00),
+    subraceNames : ['最大ランキング','最小ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
+  },
   "fishing4" : {
     title : '第4回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2019,4,8,12,00),
     endTime : new Date(2019,4,19,12,00),
-    subraceNames : ['最大ランキング','最小ランキング'],
-    borders : RACE_10_100_200_RANGE,
-    rankBorder : 200
-  },
-  "fishing5" : {
-    title : 'デモ用データ',
-    predictionType : PREDICTION_TYPE_RANGE,
-    numberFormatter : FISHING_FORMATTER,
-    beginTime : new Date(2020,4,4,20,00),
-    endTime : new Date(2020,4,14,20,00),
     subraceNames : ['最大ランキング','最小ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
