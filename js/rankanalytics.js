@@ -1,38 +1,34 @@
 // 各レース情報定義領域 開始位置
 
-var RACE_TYPE_CONFIG_MAP = [
-  {
-    id : 'slimerace',
+var RACE_TYPE_CONFIG_MAP = {
+  slimerace : {
     name : 'スライムレース',
     rounds : [
       {id : 5,name : '第5回'}]
   },
-  {
-    id : 'casinoraid',
+  casinoraid : {
     name : 'カジノレイド',
     rounds : [
       {id : 2,name : '第2回'},
       {id : 1,name : '第1回'}]
   },
-  {
-    id : 'fishing',
+  fishing : {
     name : 'フィッシングコンテスト',
     rounds : [
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
       {id : 1,name : '第1回'}]
-  }/*,
-  {
-    id : 'pencil',
+  },
+  pencil : {
     name : 'バトエン大会',
     rounds : [
       {id : 5,name : '第2回マイデッキ'},
       {id : 4,name : '第2回タクティカル'},
       {id : 3,name : '第1回マイデッキ'},
       {id : 2,name : '第1回タクティカル'}]
-  }*/
-];
+  }
+};
 
 
 // 各イベントの開催内容・開催期間情報を定義
@@ -106,6 +102,23 @@ var RACE_10_100_200_RANGE = [
     predictionName : '200位予測'
   }
 ];
+var RACE_10_100_1000_LINEAR = [
+  {
+    index : 0,
+    borderName : '1位境界',
+    predictionName : '1位予測'
+  },
+  {
+    index : 99,
+    borderName : '100位境界',
+    predictionName : '100位予測'
+  },
+  {
+    index : 999,
+    borderName : '1000位境界',
+    predictionName : '1000位予測'
+  }
+];
 
 // カンマ区切りにした後末尾に単位を付加した文字列を返却する関数を返却
 var NORMAL_FORMATTER_GENERATOR = function(str){
@@ -121,7 +134,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2020,0,9,12,00),
     endTime : new Date(2020,0,27,4,00),
-    subraceNames : ['スライムレースランキング'],
+    subraceNames : ['ランキング'],
     borders : RACE_10_100_LINEAR,
     rankBorder : 100
   },
@@ -132,7 +145,16 @@ var RACE_CONFIG_MAP = {
     endTime : new Date(2019,8,8,12,00),
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
-    rankBorder : 200
+    rankBorder : 100
+  },
+  "casinoraid1" : {
+    title : '第1回カジノレイド',
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
+    beginTime : new Date(2017,11,1,12,00),
+    endTime : new Date(2017,11,12,12,00),
+    subraceNames : ['ポーカー','スロット','ルーレット'],
+    borders : RACE_10_100_RANGE,
+    rankBorder : 100
   },
   "fishing4" : {
     title : '第4回フィッシングコンテスト',
@@ -142,7 +164,70 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['最大ランキング','最小ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
-  }
+  },
+  "fishing3" : {
+    title : '第3回フィッシングコンテスト',
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2018,8,21,12,00),
+    endTime : new Date(2018,8,30,12,00),
+    subraceNames : ['最大ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
+  },
+  "fishing2" : {
+    title : '第2回フィッシングコンテスト',
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2017,7,25,12,00),
+    endTime : new Date(2017,8,4,12,00),
+    subraceNames : ['最大ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
+  },
+  "fishing1" : {
+    title : '第1回フィッシングコンテスト',
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2017,0,19,12,00),
+    endTime : new Date(2017,0,31,12,00),
+    subraceNames : ['最大ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
+  },
+  "pencil5" : {
+    title : '第2回マイデッキルール',
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2019,11,5,12,00),
+    endTime : new Date(2019,11,15,20,00),
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  "pencil4" : {
+    title : '第2回タクティカルピックルール',
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2019,10,21,12,00),
+    endTime : new Date(2019,11,1,20,00),
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  "pencil3" : {
+    title : '第1回マイデッキルール',
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2018,10,21,12,00),
+    endTime : new Date(2018,11,1,20,00),
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  "pencil2" : {
+    title : '第1回タクティカルピックルール',
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2018,10,8,12,00),
+    endTime : new Date(2018,10,18,20,00),
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
 
 }
 
@@ -174,6 +259,10 @@ var selection = Object.create(initialSelection);
 
 var currentPeriod;
 var allPeriod;
+
+var subraceSelectionTemplate;
+var raceTypeSelectionTemplate;
+var roundSelectionTemplate;
 
 function displayDashboard(){
 
@@ -424,7 +513,28 @@ function display(){
 }
 
 function resetSubraceSelection(){
-  var tempDom = $('');
+  var raceConfig = RACE_CONFIG_MAP[selection.race];
+
+  var parentDom = $('#subraceSelection');
+  parentDom.children('.ra-dynamic').remove();
+
+　for(var i=0;i<raceConfig.subraceNames.length;i++) {
+    var newDom = subraceSelectionTemplate.clone();
+    newDom.children().text(raceConfig.subraceNames[i]);
+    if(selection.subrace == i){
+      newDom.addClass('active');
+    }
+
+    newDom.on('click', {index : i} , function(e){
+      selection.subrace = e.data.index;
+
+      resetSubraceSelection();
+      display();
+    });
+
+    parentDom.append(newDom);
+  }
+
 }
 
 //読み込みデータをもとに追加情報を計算
@@ -486,35 +596,81 @@ function reloadRaceData(){
 }
 
 function setRound() {
-}
+  var rounds = RACE_TYPE_CONFIG_MAP[selection.raceType].rounds;
 
-function initRaceType(){
-  var tempDom = $('#raceSelection .ra-template');
-  var newTempDom = tempDom.clone();
-  newTempDom.removeClass('ra-template');
-  newTempDom.addClass('ra-dynamic');
+  var parentDom = $('#roundSelection');
+  parentDom.children('.ra-dynamic').remove();
 
-  var prevDom = tempDom;
+　for(var i=0;i<rounds.length;i++) {
+    var newDom = roundSelectionTemplate.clone();
+    newDom.children().text(rounds[i].name);
 
-　for(var i=0;i<RACE_TYPE_CONFIG_MAP.length;i++) {
-    var newDom = newTempDom.clone();
-    newDom.children().text(RACE_TYPE_CONFIG_MAP[i].name);
-    newDom.on('click', {index : i} , function(e){
+    newDom.on('click', {round : rounds[i].id} , function(e){
+      var t = selection.raceType;
       selection = Object.create(initialSelection);
-      selection.raceType = RACE_TYPE_CONFIG_MAP[e.data.index].id;
-      selection.round = RACE_TYPE_CONFIG_MAP[e.data.index].rounds[0].id;
+      selection.raceType = t;
+      selection.round = e.data.round;
       selection.race = selection.raceType + selection.round;
+
+      resetSubraceSelection();
       initEventHandler();
       reloadRaceData();
     });
 
-    prevDom.after(newDom)
-    prevDom = newDom;
+    parentDom.append(newDom);
+  }
+
+}
+
+function initSelectionTemplate() {
+  var tempDom;
+  tempDom = $('#subraceSelection .ra-template');
+  subraceSelectionTemplate = tempDom.clone();
+  subraceSelectionTemplate.removeClass('ra-template');
+  subraceSelectionTemplate.addClass('ra-dynamic');
+  tempDom.remove();
+
+  tempDom = $('#raceTypeSelection .ra-template');
+  raceTypeSelectionTemplate = tempDom.clone();
+  raceTypeSelectionTemplate.removeClass('ra-template');
+  raceTypeSelectionTemplate.addClass('ra-dynamic');
+  tempDom.remove();
+
+  tempDom = $('#roundSelection .ra-template');
+  roundSelectionTemplate = tempDom.clone();
+  roundSelectionTemplate.removeClass('ra-template');
+  roundSelectionTemplate.addClass('ra-dynamic');
+  tempDom.remove();
+
+}
+
+function initRaceType(){
+  var parentDom = $('#raceTypeSelection');
+  parentDom.children('.ra-dynamic').remove();
+
+　for(var key in RACE_TYPE_CONFIG_MAP) {
+    var newDom = raceTypeSelectionTemplate.clone();
+    newDom.children().text(RACE_TYPE_CONFIG_MAP[key].name);
+    newDom.on('click', {key : key} , function(e){
+      selection = Object.create(initialSelection);
+      selection.raceType = e.data.key;
+      selection.round = RACE_TYPE_CONFIG_MAP[e.data.key].rounds[0].id;
+      selection.race = selection.raceType + selection.round;
+      setRound();
+      resetSubraceSelection();
+      initEventHandler();
+      reloadRaceData();
+    });
+
+    parentDom.append(newDom)
   }
 }
 
 $(function () {
+  initSelectionTemplate();
   initRaceType();
+  setRound();
+  resetSubraceSelection();
   initEventHandler();
   reloadRaceData();
 });
