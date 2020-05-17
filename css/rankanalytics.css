@@ -22,6 +22,11 @@
  color:olive;
 }
 
+.ra-db-normal {
+    font-size: 150%;
+    color:black;
+}
+   
 .ra-template {
  display: none;
 }
