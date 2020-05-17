@@ -107,10 +107,18 @@ var RACE_10_100_200_RANGE = [
   }
 ];
 
+// カンマ区切りにした後末尾に単位を付加した文字列を返却する関数を返却
+var NORMAL_FORMATTER_GENERATOR = function(str){
+  return function(x) {return x.toLocaleString() + str; }
+}
+
+// 釣り用のフォーマッタ
+var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
+
 var RACE_CONFIG_MAP = {
   "slimerace5" : {
     title : '第5回スライムレース',
-    pointRate : 1,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2020,0,9,12,00),
     endTime : new Date(2020,0,27,4,00),
     subraceNames : ['スライムレースランキング'],
@@ -119,7 +127,7 @@ var RACE_CONFIG_MAP = {
   },
   "casinoraid2" : {
     title : '第2回カジノレイド',
-    pointRate : 1,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2019,7,28,12,00),
     endTime : new Date(2019,8,8,12,00),
     subraceNames : ['ポーカー','スロット','ルーレット'],
@@ -128,7 +136,7 @@ var RACE_CONFIG_MAP = {
   },
   "fishing4" : {
     title : '第4回フィッシングコンテスト',
-    pointRate : 0.1,
+    numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2019,4,8,12,00),
     endTime : new Date(2019,4,19,12,00),
     subraceNames : ['最大ランキング','最小ランキング'],
@@ -330,8 +338,8 @@ function displayDashboard(){
       borderColumns[i + 3][allPeriod.length] = Math.floor(averagePointDiff * (allPeriod.length - 1));
 
       $("#border" + i + " .borderName").text(raceConfig.borders[i].borderName);
-      $("#border" + i + " .latest").text(snapshotList[snapshotList.length - 1].rankList[raceConfig.borders[i].index].point.toLocaleString());
-      $("#border" + i + " .prediction").text(borderColumns[i + 3][allPeriod.length].toLocaleString());
+      $("#border" + i + " .latest").text(raceConfig.numberFormatter(snapshotList[snapshotList.length - 1].rankList[raceConfig.borders[i].index].point));
+      $("#border" + i + " .prediction").text(raceConfig.numberFormatter(borderColumns[i + 3][allPeriod.length]));
     }
 
     borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': raceConfig.beginTime }];
@@ -374,7 +382,7 @@ function displayDashboard(){
       },
       y: {
         tick: {
-          format: function (x) { return x * raceConfig.pointRate; }
+          format: raceConfig.numberFormatter
         }
       }
     }
@@ -396,7 +404,7 @@ function displayDashboard(){
       },
       y: {
         tick: {
-          format: function (x) { return x * raceConfig.pointRate; }
+          format: raceConfig.numberFormatter
         }
       }
     },
@@ -413,6 +421,10 @@ function display(){
       displayDashboard();
       break;
   }
+}
+
+function resetSubraceSelection(){
+  var tempDom = $('');
 }
 
 //読み込みデータをもとに追加情報を計算
