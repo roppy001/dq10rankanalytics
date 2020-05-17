@@ -1,3 +1,6 @@
+var PREDICTION_TYPE_LINEAR = 0;
+var PREDICTION_TYPE_RANGE = 1;
+
 // 各レース情報定義領域 開始位置
 
 var RACE_TYPE_CONFIG_MAP = {
@@ -18,7 +21,8 @@ var RACE_TYPE_CONFIG_MAP = {
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
-      {id : 1,name : '第1回'}]
+      {id : 1,name : '第1回'},
+      {id : 5,name : 'デモ用'}]
   },
   pencil : {
     name : 'バトエン大会',
@@ -36,85 +40,78 @@ var RACE_TYPE_CONFIG_MAP = {
 
 var RACE_10_100_LINEAR = [
   {
-    index : 0,
+    rankIndex : 0,
     borderName : '1位境界',
     predictionName : '1位予測'
   },
   {
-    index : 9,
+    rankIndex : 9,
     borderName : '10位境界',
     predictionName : '10位予測'
   },
   {
-    index : 99,
+    rankIndex : 99,
     borderName : '100位境界',
     predictionName : '100位予測'
   }
 ];
 var RACE_10_100_RANGE = [
   {
-    index : 0,
+    rankIndex : 0,
     borderName : '1位境界',
     predictionName : '1位継続'
   },
   {
-    index : 9,
+    rankIndex : 9,
     borderName : '10位境界',
     predictionName : '10位予測'
   },
   {
-    index : 99,
-    borderName : '100位境界',
-    predictionName : '100位予測'
-  }
-];
-var RACE_10_100_RANGE = [
-  {
-    index : 0,
-    borderName : '1位境界',
-    predictionName : '1位継続'
-  },
-  {
-    index : 9,
-    borderName : '10位境界',
-    predictionName : '10位予測'
-  },
-  {
-    index : 99,
+    rankIndex : 99,
     borderName : '100位境界',
     predictionName : '100位予測'
   }
 ];
 var RACE_10_100_200_RANGE = [
   {
-    index : 0,
+    rankIndex : 0,
     borderName : '1位境界',
     predictionName : '1位継続'
   },
   {
-    index : 9,
+    rankIndex : 9,
     borderName : '10位境界',
     predictionName : '10位予測'
   },
   {
-    index : 199,
+    rankIndex : 99,
+    borderName : '100位境界',
+    predictionName : '100位予測'
+  },
+  {
+    rankIndex : 199,
     borderName : '200位境界',
     predictionName : '200位予測'
   }
 ];
 var RACE_10_100_1000_LINEAR = [
   {
-    index : 0,
+    rankIndex : 0,
     borderName : '1位境界',
     predictionName : '1位予測'
   },
   {
-    index : 99,
+    rankIndex : 9,
+    borderName : '10位境界',
+    predictionName : '10位予測'
+  },
+  {
+    rankIndex : 99,
     borderName : '100位境界',
     predictionName : '100位予測'
   },
   {
-    index : 999,
+    rankIndex : 999,
     borderName : '1000位境界',
     predictionName : '1000位予測'
   }
@@ -131,6 +128,7 @@ var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 var RACE_CONFIG_MAP = {
   "slimerace5" : {
     title : '第5回スライムレース',
+    predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2020,0,9,12,00),
     endTime : new Date(2020,0,27,4,00),
@@ -140,6 +138,7 @@ var RACE_CONFIG_MAP = {
   },
   "casinoraid2" : {
     title : '第2回カジノレイド',
+    predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2019,7,28,12,00),
     endTime : new Date(2019,8,8,12,00),
@@ -149,6 +148,7 @@ var RACE_CONFIG_MAP = {
   },
   "casinoraid1" : {
     title : '第1回カジノレイド',
+    predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2017,11,1,12,00),
     endTime : new Date(2017,11,12,12,00),
@@ -158,6 +158,7 @@ var RACE_CONFIG_MAP = {
   },
   "fishing4" : {
     title : '第4回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2019,4,8,12,00),
     endTime : new Date(2019,4,19,12,00),
@@ -165,8 +166,19 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
+  "fishing5" : {
+    title : 'デモ用データ',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2020,4,4,20,00),
+    endTime : new Date(2020,4,14,20,00),
+    subraceNames : ['最大ランキング','最小ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
+  },
   "fishing3" : {
     title : '第3回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2018,8,21,12,00),
     endTime : new Date(2018,8,30,12,00),
@@ -176,6 +188,7 @@ var RACE_CONFIG_MAP = {
   },
   "fishing2" : {
     title : '第2回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2017,7,25,12,00),
     endTime : new Date(2017,8,4,12,00),
@@ -185,6 +198,7 @@ var RACE_CONFIG_MAP = {
   },
   "fishing1" : {
     title : '第1回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2017,0,19,12,00),
     endTime : new Date(2017,0,31,12,00),
@@ -195,6 +209,7 @@ var RACE_CONFIG_MAP = {
   "pencil5" : {
     title : '第2回マイデッキルール',
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    predictionType : PREDICTION_TYPE_LINEAR,
     beginTime : new Date(2019,11,5,12,00),
     endTime : new Date(2019,11,15,20,00),
     subraceNames : ['ランキング'],
@@ -203,6 +218,7 @@ var RACE_CONFIG_MAP = {
   },
   "pencil4" : {
     title : '第2回タクティカルピックルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2019,10,21,12,00),
     endTime : new Date(2019,11,1,20,00),
@@ -212,6 +228,7 @@ var RACE_CONFIG_MAP = {
   },
   "pencil3" : {
     title : '第1回マイデッキルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2018,10,21,12,00),
     endTime : new Date(2018,11,1,20,00),
@@ -221,6 +238,7 @@ var RACE_CONFIG_MAP = {
   },
   "pencil2" : {
     title : '第1回タクティカルピックルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2018,10,8,12,00),
     endTime : new Date(2018,10,18,20,00),
@@ -265,6 +283,11 @@ var raceTypeSelectionTemplate;
 var roundSelectionTemplate;
 
 function displayDashboard(){
+  for(var i=0;i<4;i++) {
+    $('#border' + i + ' .borderName').text('');
+    $('#border' + i + ' .latest').text('');
+    $('#border' + i + ' .prediction').text('');
+  }
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
 
@@ -399,36 +422,45 @@ function displayDashboard(){
     }
   }
 
-  var borderColumns = new Array(raceConfig.borders.length * 2);
+  var actualBorderColumns = new Array(raceConfig.borders.length);
+  var predictedBorderColumns = new Array(raceConfig.borders.length);
   var borderRegions = {};
 
   for (var i = 0; i < raceConfig.borders.length; i++) {
-    borderColumns[i] = new Array(allPeriod.length + 1);
-    borderColumns[i + 3] = new Array(allPeriod.length + 1);
-
-    borderColumns[i][0] = raceConfig.borders[i].borderName;
-    borderColumns[i + 3][0] = raceConfig.borders[i].predictionName;
-
-    borderColumns[i].fill(null,1);
-    borderColumns[i + 3].fill(null,1);
+    actualBorderColumns[i] = new Array(allPeriod.length + 1);
+    actualBorderColumns[i][0] = raceConfig.borders[i].borderName;
+    actualBorderColumns[i].fill(null,1);
 
     for (var j = 0; j < snapshotList.length; j++) {
-      borderColumns[i][timeIndexMapperAll[j] + 1] = snapshotList[j].rankList[raceConfig.borders[i].index].point;
+      var snapshot = snapshotList[j];
+
+      actualBorderColumns[i][timeIndexMapperAll[j] + 1] = snapshot.rankList[snapshot.rankMapper[raceConfig.borders[i].rankIndex]].point;
     }
+ 
+    predictedBorderColumns[i] = new Array(allPeriod.length + 1);
+    predictedBorderColumns[i][0] = raceConfig.borders[i].predictionName;
+    predictedBorderColumns[i].fill(null,1);
 
-    borderColumns[i][1] = 0;
-    borderColumns[i + 3][1] = 0;
+    $('#border' + i + ' .borderName').text(raceConfig.borders[i].borderName);
+    $('#border' + i + ' .latest').text(raceConfig.numberFormatter(snapshot.rankList[snapshot.rankMapper[raceConfig.borders[i].rankIndex]].point));
 
-    var timeIndex = timeIndexMapperAll[snapshotList.length - 1];
+    if (raceConfig.predictionType == PREDICTION_TYPE_LINEAR) {
+      actualBorderColumns[i][1] = 0;
+      predictedBorderColumns[i][1] = 0;
 
-    if(timeIndex > 0){
-      var averagePointDiff = snapshotList[snapshotList.length - 1].rankList[raceConfig.borders[i].index].point / timeIndex;
+      var timeIndex = timeIndexMapperAll[snapshotList.length - 1];
 
-      borderColumns[i + 3][allPeriod.length] = Math.floor(averagePointDiff * (allPeriod.length - 1));
+      if(timeIndex > 0){
+        var snapshot = snapshotList[snapshotList.length - 1];
 
-      $("#border" + i + " .borderName").text(raceConfig.borders[i].borderName);
-      $("#border" + i + " .latest").text(raceConfig.numberFormatter(snapshotList[snapshotList.length - 1].rankList[raceConfig.borders[i].index].point));
-      $("#border" + i + " .prediction").text(raceConfig.numberFormatter(borderColumns[i + 3][allPeriod.length]));
+        var averagePointDiff = snapshot.rankList[snapshot.rankMapper[raceConfig.borders[i].rankIndex]].point / timeIndex;
+
+        predictedBorderColumns[i][allPeriod.length] = Math.floor(averagePointDiff * (allPeriod.length - 1));
+
+        $('#border' + i + ' .prediction').text(raceConfig.numberFormatter(predictedBorderColumns[i][allPeriod.length]));
+      }
+    } else {
+      predictedBorderColumns = [];
     }
 
     borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': raceConfig.beginTime }];
@@ -481,7 +513,7 @@ function displayDashboard(){
     bindto: '#border',
     data: {
       x : 'x',
-      columns: [['x'].concat(allPeriod)].concat(borderColumns),
+      columns: [['x'].concat(allPeriod)].concat(actualBorderColumns,predictedBorderColumns),
       regions: borderRegions
     },
     axis: {
@@ -541,6 +573,7 @@ function resetSubraceSelection(){
 function calculate(){
   var raceConfig = RACE_CONFIG_MAP[selection.race];
 
+  // x軸をあらかじめ計算する。
   currentPeriod = [];
   allPeriod = [];
 
@@ -555,6 +588,27 @@ function calculate(){
       if(targetTime <= currentTime){
         currentPeriod.push(new Date(targetTime));
       }
+  }
+
+  // ランキングからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
+  for(var i = 0; i< data.subraceList.length ; i++){
+    var mapper = new Array(raceConfig.rankBorder);
+    var snapshotList = data.subraceList[i].snapshotList;
+
+    for(var j=0;j<snapshotList.length;j++) {
+      var rankList = snapshotList[j].rankList;
+      // 該当の順位に対し、データが無い場合はそれより上位のデータを参照する。
+      // ただし、1位の場合はデータが存在する最上位のデータを参照することとする。
+      for(var rankIndex = 0,rankListIndex = 0; rankIndex< raceConfig.rankBorder ; rankIndex++){
+        if(rankListIndex < rankList.length-1 && rankIndex + 1 == rankList[rankListIndex+1].rank){
+          rankListIndex++;
+        }
+        mapper[rankIndex] = rankListIndex;
+      }
+      snapshotList[j]['rankMapper']=mapper;
+    }
+
+
   }
 
 }
