@@ -120,7 +120,7 @@ var RACE_10_100_1000_LINEAR = [
 
 // カンマ区切りにした後末尾に単位を付加した文字列を返却する関数を返却
 var NORMAL_FORMATTER_GENERATOR = function(str){
-  return function(x) {return x.toLocaleString() + str; }
+  return function(x) {return Math.floor(x).toLocaleString() + str; }
 }
 
 // 釣り用のフォーマッタ
@@ -338,6 +338,8 @@ function displayDashboard(){
     return;
   }  
 
+  var currentTime = new Date(snapshotList[snapshotList.length - 1].timeString);
+
   $('#displayRankString').text(
     selection.targetRank + '位～' + endRank + '位');
 
@@ -459,22 +461,53 @@ function displayDashboard(){
       actualBorderColumns[i][1] = 0;
       predictedBorderColumns[i][1] = 0;
 
-      var timeIndex = timeIndexMapperAll[snapshotList.length - 1];
+      var currentTimeIndex = timeIndexMapperAll[snapshotList.length - 1];
 
-      if(timeIndex > 0){
+      if(currentTimeIndex > 0){
         var snapshot = snapshotList[snapshotList.length - 1];
 
-        var averagePointDiff = snapshot.rankList[snapshot.rankMapper[raceConfig.borders[i].rankIndex]].point / timeIndex;
+        var averagePointDiff = snapshot.rankList[snapshot.rankMapper[raceConfig.borders[i].rankIndex]].point / currentTimeIndex;
 
         predictedBorderColumns[i][allPeriod.length] = Math.floor(averagePointDiff * (allPeriod.length - 1));
 
         $('#border' + i + ' .prediction').text(raceConfig.numberFormatter(predictedBorderColumns[i][allPeriod.length]));
       }
+
+      borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': raceConfig.beginTime }];
     } else {
-      predictedBorderColumns = [];
+      var snapshot = snapshotList[snapshotList.length - 1];
+
+      var currentTimeIndex = timeIndexMapperAll[snapshotList.length - 1];
+      if(currentTimeIndex > 0){
+        for(var timeIndex = 0;timeIndex < allPeriod.length;timeIndex++) {
+          if(timeIndex<=currentTimeIndex){
+            // 過去は実績値を表示
+            predictedBorderColumns[i][timeIndex+1] = actualBorderColumns[i][timeIndex+1];
+          } else{
+            // 未来は予測値を表示
+            
+            // 順位に 経過期間/計算対象時刻 を掛けて、最終日値が現在の何位に相当するかを小数ありで求める
+            var predictedRankIndex = Math.max((raceConfig.borders[i].rankIndex + 1) * currentTimeIndex / timeIndex -1,0);
+
+            // 小数部分は線形補完する
+
+            var lowerRankIndex = Math.floor(predictedRankIndex);
+            var lowerDiff = predictedRankIndex - lowerRankIndex;
+            var upperRankIndex = Math.min(lowerRankIndex + 1,raceConfig.rankBorder-1);
+            var upperDiff = 1 - lowerDiff;
+
+            predictedBorderColumns[i][timeIndex+1] = snapshot.rankList[snapshot.rankMapper[lowerRankIndex]].point * upperDiff + snapshot.rankList[snapshot.rankMapper[upperRankIndex]].point * lowerDiff;
+          }
+        }
+        $('#border' + i + ' .prediction').text(raceConfig.numberFormatter(predictedBorderColumns[i][allPeriod.length]));
+      } else {
+        actualBorderColumns[i][1] = 0;
+        predictedBorderColumns[i][1] = 0;
+      }
+
+      borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': currentTime }];
     }
 
-    borderRegions[raceConfig.borders[i].predictionName] = [{ 'start': raceConfig.beginTime }];
   }
 
 
