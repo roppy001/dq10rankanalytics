@@ -293,6 +293,25 @@ var subraceSelectionTemplate;
 var raceTypeSelectionTemplate;
 var roundSelectionTemplate;
 
+
+var COLORS =[
+  'rgb(31, 119, 180)',
+  'rgb(255, 127, 14)',
+  'rgb(44, 160, 44)',
+  'rgb(214, 39, 40)',
+  'rgb(148, 103, 189)',
+  'rgb(140, 86, 75)',
+  'rgb(227, 119, 194)',
+  'rgb(127, 127, 127)',
+  'rgb(188, 189, 34)',
+  'rgb(23, 190, 207)'];
+
+function getColor(num){
+  return COLORS[num % COLORS.length];
+}
+
+var rankChart;
+
 function displayDashboard(){
   for(var i=0;i<4;i++) {
     $('#border' + i + ' .borderName').text('');
@@ -342,7 +361,7 @@ function displayDashboard(){
 
   $('#displayRankString').text(
     selection.targetRank + '位～' + endRank + '位');
-
+/*
   // 各キャラのデータを格納する配列を作成
   var rankColumns = new Array(rankLength);
   var pointColumns = new Array(rankLength);
@@ -393,8 +412,6 @@ function displayDashboard(){
     timeIndexMapper[i] = Math.min(j,modifiedCurrentPeriod.length - 1);
   }
   
-
-
   for (var i = 0,nameMap = {}; i < rankLength; i++) {
     rankColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
     rankColumns[i].fill(null, 1);
@@ -509,8 +526,117 @@ function displayDashboard(){
     }
 
   }
+*/
+  var rankDatasets = new Array(rankLength);
+  var rankColumns = new Array(rankLength);
+  var pointColumns = new Array(rankLength);
+
+  // 最新時刻のランキング者を表示対象として記憶する
+  var displayIds = new Array(rankLength);
+
+  for (var i = 0,nameMap = {}; i < rankLength; i++) {
+    rankColumns[i] = new Array(snapshotList.length);
+    pointColumns[i] = new Array(snapshotList.length);
+
+    for(var j = 0;j<snapshotList.length;j ++) {
+      rankColumns[i][j] = {x : snapshotList[j].date,y : raceConfig.rankBorder + 10};
+    }
+
+    displayIds[i] = snapshotList[snapshotList.length - 1].rankList[startIndex +i].id;
+
+    var name = snapshotList[snapshotList.length - 1].rankList[startIndex +i].name;
+
+    if(name in nameMap){
+      nameMap[name] = nameMap[name] + 1;
+      name = name + nameMap[name];
+    } else {
+      nameMap[name] = 1;
+    }
+
+    rankDatasets[i] = {
+      label : name,
+      hoverBorderColor: 'rgba(0, 0, 0)', 
+      borderColor: getColor(i),
+      backgroundColor: getColor(i),
+      data : rankColumns[i],
+      fill: false};
+  }
+
+  for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
 
 
+    for (var i = 0; i < snapshotList[snapshotIndex].rankList.length; i++) {
+      var currentId = snapshotList[snapshotIndex].rankList[i].id;
+      var columnIndex = displayIds.indexOf(currentId);
+      if (columnIndex != -1) {
+        pointColumns[columnIndex][snapshotIndex] = 
+        { 
+          x : snapshotList[snapshotIndex].date,
+          y : snapshotList[snapshotIndex].rankList[i].point
+        };
+
+        // グラフを逆順に並べる方法として、順位の値はマイナスでグラフを生成し、表示時に再度プラスに置き換える
+        rankColumns[columnIndex][snapshotIndex] = 
+        { 
+          x : snapshotList[snapshotIndex].date,
+          y : snapshotList[snapshotIndex].rankList[i].rank
+        };
+      }
+    }
+  }
+
+  var config = {
+    type: 'line',
+    data: {
+      datasets: rankDatasets
+    },
+    options: {
+      responsive: true,
+      tooltips: {
+        mode: 'index'
+      },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          time: {
+            displayFormats: {
+                quarter: 'MM/DD HH'
+            }
+          },
+          ticks: {
+            min : raceConfig.beginTime,
+            max : raceConfig.endTime
+          }
+        }],
+        yAxes: [{
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'value'
+          },
+          ticks: {
+            reverse : true,
+            min : Math.max(selection.targetRank -DISPLAY_RANK_UPPER_INTERVAL,0),
+            max : Math.min(endRank +DISPLAY_RANK_LOWER_INTERVAL,raceConfig.rankBorder)
+          }
+        }]
+      },
+      legend : {
+        labels: {
+          boxWidth: 8,
+          fontSize: 6
+        }        
+      }
+    }
+  };
+  var ctx = document.getElementById('rank').getContext('2d');
+
+  if(rankChart){
+    rankChart.destroy();
+  }
+  rankChart = new Chart(ctx, config);
+
+/*
   var top = c3.generate({
     bindto: '#rank',
     data: {
@@ -577,7 +703,7 @@ function displayDashboard(){
       connectNull: true
     }
 
-  });
+  });*/
 }
 
 function display(){
@@ -635,6 +761,7 @@ function calculate(){
   }
 
   // ランキングからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
+  // また、各snapshotのDate情報も格納する
   for(var i = 0; i< data.subraceList.length ; i++){
     var mapper = new Array(raceConfig.rankBorder);
     var snapshotList = data.subraceList[i].snapshotList;
@@ -650,6 +777,10 @@ function calculate(){
         mapper[rankIndex] = rankListIndex;
       }
       snapshotList[j]['rankMapper']=mapper;
+
+      // 各snapshotのDate情報を格納する。ただし、イベント期間よりも後の時刻はイベント期間最終日時に修正される
+      snapshotList[j]['date'] = Math.min(new Date(snapshotList[j].timeString),raceConfig.endTime);
+
     }
 
 
