@@ -127,7 +127,7 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
-  "slimerace5" : {
+  slimerace5 : {
     title : '第5回スライムレース',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
@@ -137,7 +137,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_LINEAR,
     rankBorder : 100
   },
-  "casinoraid3" : {
+  casinoraid3 : {
     title : 'デモ用データ(期間2倍化)',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
@@ -147,7 +147,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
-  "casinoraid2" : {
+  casinoraid2 : {
     title : '第2回カジノレイド',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
@@ -157,7 +157,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
-  "casinoraid1" : {
+  casinoraid1 : {
     title : '第1回カジノレイド',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
@@ -167,7 +167,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
-  "fishing5" : {
+  fishing5 : {
     title : 'デモ用データ(期間2倍化)',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -177,7 +177,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing4" : {
+  fishing4 : {
     title : '第4回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -187,7 +187,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing3" : {
+  fishing3 : {
     title : '第3回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -197,7 +197,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing2" : {
+  fishing2 : {
     title : '第2回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -207,7 +207,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing1" : {
+  fishing1 : {
     title : '第1回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -217,7 +217,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "pencil5" : {
+  pencil5 : {
     title : '第2回マイデッキルール',
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -227,7 +227,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
-  "pencil4" : {
+  pencil4 : {
     title : '第2回タクティカルピックルール',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
@@ -237,7 +237,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
-  "pencil3" : {
+  pencil3 : {
     title : '第1回マイデッキルール',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
@@ -247,7 +247,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
-  "pencil2" : {
+  pencil2 : {
     title : '第1回タクティカルピックルール',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
@@ -281,7 +281,8 @@ var initialSelection = {
   race : "slimerace5",
   subrace : 0,
   targetRank : 1,
-  targetRankInterval : 10
+  targetRankInterval : 10,
+  characterId : 0
 };
 
 var selection = Object.create(initialSelection);
@@ -294,6 +295,9 @@ var raceTypeSelectionTemplate;
 var roundSelectionTemplate;
 
 function displayDashboard(){
+  $('#dashboard').removeClass('ra-hidden');
+  $('#selectDashboard').addClass('active');
+
   for(var i=0;i<4;i++) {
     $('#border' + i + ' .borderName').text('');
     $('#border' + i + ' .latest').text('');
@@ -338,8 +342,6 @@ function displayDashboard(){
     return;
   }  
 
-  var currentTime = new Date(snapshotList[snapshotList.length - 1].timeString);
-
   $('#displayRankString').text(
     selection.targetRank + '位～' + endRank + '位');
 
@@ -360,7 +362,7 @@ function displayDashboard(){
 
   // 欠けている時刻を判定する。
   for (var i = 0,j = 0; i < snapshotList.length; i++) {
-    var snapshotTime = new Date(snapshotList[i].timeString);
+    var snapshotTime = snapshotList[i].date;
 
     while(j < currentPeriod.length && currentPeriod[j] < snapshotTime){
       j++;
@@ -384,7 +386,7 @@ function displayDashboard(){
   var timeIndexMapper = new Array(snapshotList.length);
 
   for (var i = 0,j = 0; i < snapshotList.length; i++) {
-    var snapshotTime = new Date(snapshotList[i].timeString);
+    var snapshotTime = snapshotList[i].date;
 
     while(j < modifiedCurrentPeriod.length && modifiedCurrentPeriod[j] < snapshotTime){
       j++;
@@ -422,6 +424,7 @@ function displayDashboard(){
     for (var i = 0; i < snapshotList[snapshotIndex].rankList.length; i++) {
       var currentId = snapshotList[snapshotIndex].rankList[i].id;
       var columnIndex = displayIds.indexOf(currentId);
+
       if (columnIndex != -1) {
         pointColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = snapshotList[snapshotIndex].rankList[i].point;
 
@@ -580,12 +583,32 @@ function displayDashboard(){
   });
 }
 
+function displayCharacter(){
+  $('#character').removeClass('ra-hidden');
+  $('#selectCharacter').addClass('active');
+}
+
 function display(){
+  $('#dashboard').addClass('ra-hidden');
+  $('#selectDashboard').removeClass('active');
+  $('#character').addClass('ra-hidden');
+  $('#selectCharacter').removeClass('active');
+
+  var raceConfig = RACE_CONFIG_MAP[selection.race];
+  $('#raceTitle').text(raceConfig.title);
+
+  var snapshotList = data.subraceList[0].snapshotList;
+  var currentTime = snapshotList[snapshotList.length - 1].date;
+  $('#currentTime').text(currentTime.getFullYear() +'/' + (currentTime.getMonth() + 1) +'/'+ currentTime.getDate() + ' ' + currentTime.getHours() + '時');
+
   switch (selection.screen){
     case 0:
       displayDashboard();
       break;
-  }
+    case 1:
+      displayCharacter();
+      break;
+    }
 }
 
 function resetSubraceSelection(){
@@ -634,12 +657,12 @@ function calculate(){
       }
   }
 
-  // ランキングからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
   for(var i = 0; i< data.subraceList.length ; i++){
-    var mapper = new Array(raceConfig.rankBorder);
     var snapshotList = data.subraceList[i].snapshotList;
 
+    // ランキングからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
     for(var j=0;j<snapshotList.length;j++) {
+      var mapper = new Array(raceConfig.rankBorder);
       var rankList = snapshotList[j].rankList;
       // 該当の順位に対し、データが無い場合はそれより上位のデータを参照する。
       // ただし、1位の場合はデータが存在する最上位のデータを参照することとする。
@@ -650,8 +673,28 @@ function calculate(){
         mapper[rankIndex] = rankListIndex;
       }
       snapshotList[j]['rankMapper']=mapper;
+      // 各snapshotのDate情報を格納する。ただし、イベント期間よりも後の時刻はイベント期間最終日時に修正される
+      var d = new Date(snapshotList[j].timeString);
+      if(d >= raceConfig.endTime) {
+        d = raceConfig.endTime; 
+      }
+
+      snapshotList[j]['date'] = d;
     }
 
+    // idからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
+    for(var j=0;j<snapshotList.length;j++) {
+      var mapper = new Array(data.subraceList[i].displayNameList.length);
+      mapper.fill(null);
+
+      var rankList = snapshotList[j].rankList;
+      // 該当の順位に対し、データが無い場合はそれより上位のデータを参照する。
+      // ただし、1位の場合はデータが存在する最上位のデータを参照することとする。
+      for(var rankListIndex = 0; rankListIndex< rankList.length ; rankListIndex++){
+        mapper[rankList[rankListIndex].id] = rankListIndex;
+      }
+      snapshotList[j]['idMapper']=mapper;
+    }
 
   }
 
@@ -742,7 +785,8 @@ function initSelectionTemplate() {
 
 }
 
-function initRaceType(){
+function initHeader(){
+  //レースタイプ選択肢を設定
   var parentDom = $('#raceTypeSelection');
   parentDom.children('.ra-dynamic').remove();
 
@@ -762,13 +806,27 @@ function initRaceType(){
 
     parentDom.append(newDom)
   }
+
+  //画面切り替えイベントを設定
+  $('#selectDashboard').on('click',function(){
+    selection.screen = 0;
+    display();
+  });
+
+  $('#selectCharacter').on('click',function(){
+    selection.screen = 1;
+    display();
+  });
+
 }
 
 $(function () {
   initSelectionTemplate();
-  initRaceType();
+  initHeader();
   setRound();
   resetSubraceSelection();
   initEventHandler();
   reloadRaceData();
 });
+
+

@@ -42,10 +42,8 @@
       </div>
       <div class="navbar-collapse collapse" id="dtMenu">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">概要</a></li>
-          <li><a href="#">キャラ別</a></li>
-          <li><a href="#">累計</a></li>
-          <li><a href="#">差分</a></li>
+          <li id="selectDashboard" class="active"><a href="#">概要</a></li>
+          <li id="selectCharacter" ><a href="#">キャラ別</a></li>
           <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
               aria-expanded="false">
               レース <span class="caret"></span>
@@ -66,6 +64,7 @@
       </div>
     </div>
   </nav>
+<!-- ヘッダ画面 -->
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-12 col-sm-6 text-left ra-title" id="raceTitle">
@@ -77,6 +76,9 @@
     <ul id="subraceSelection" class="nav nav-tabs nav-justified">
       <li role="presentation" class="ra-template"><a href="#"></a></li>
     </ul>
+  </div>
+<!-- ダッシュボード画面 -->
+  <div id="dashboard" class="container-fluid">
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <div class="text-center">スコア境界値</div>
@@ -129,6 +131,52 @@
       <div class="col-xs-12 col-sm-6">
         <div class="text-center">スコア遷移グラフ</div>
         <div id="point"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- キャラ別画面 -->
+  <div id="character" class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <div class="text-center">スコア境界値</div>
+        <table class="table">
+          <tr>
+            <th>境界</th>
+            <th>最新</th>
+            <th>最終日予測</th>
+          </tr>
+          <tr class="ra-db-gold">
+            <td class="borderName"></td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+          <tr class="ra-db-silver">
+            <td class="borderName"></td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+          <tr class="ra-db-bronze">
+            <td class="borderName"></td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+          <tr class="ra-db-normal">
+            <td class="borderName"></td>
+            <td class="latest"></td>
+            <td class="prediction"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div class="text-center">キャラの強さ</div>
+        <canvas id="strength"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12">
+        <div class="text-center">キャラ別遷移グラフ</div>
+        <div id="character"></div>
       </div>
     </div>
   </div>
