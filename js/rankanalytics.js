@@ -290,6 +290,8 @@ var initialSelection = {
 
 var selection = Object.create(initialSelection);
 
+var nameIdMapper;
+
 var currentPeriod;
 var modifiedCurrentPeriod;
 var allPeriod;
@@ -409,6 +411,8 @@ function displayDashboard(){
 
   calculateTimeMappers(snapshotList);
 
+  nameIdMapper = {};
+
   for (var i = 0,nameMap = {}; i < rankLength; i++) {
     rankColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
     rankColumns[i].fill(null, 1);
@@ -416,7 +420,8 @@ function displayDashboard(){
     pointColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
     pointColumns[i].fill(null, 1);
 
-    displayIds[i] = snapshotList[snapshotList.length - 1].rankList[startIndex +i].id;
+    var id = snapshotList[snapshotList.length - 1].rankList[startIndex +i].id;
+    displayIds[i] = id;
 
     var name = snapshotList[snapshotList.length - 1].rankList[startIndex +i].name;
 
@@ -426,6 +431,8 @@ function displayDashboard(){
     } else {
       nameMap[name] = 1;
     }
+
+    nameIdMapper[name] = id;
 
     rankColumns[i][0] = name;
     pointColumns[i][0] = name;
@@ -526,7 +533,7 @@ function displayDashboard(){
   }
 
 
-  var top = c3.generate({
+  var rank = c3.generate({
     bindto: '#rank',
     data: {
       x : 'x',
@@ -543,6 +550,15 @@ function displayDashboard(){
         tick: {
           format: function (x) { return -x; }
         }
+      }
+    },
+    legend: {
+      item: {
+        onclick: function (id) {
+          selection.characterId = nameIdMapper[id];
+          selection.screen = 1;
+          display();
+        } 
       }
     }
   });
@@ -564,6 +580,15 @@ function displayDashboard(){
         tick: {
           format: raceConfig.numberFormatter
         }
+      }
+    },
+    legend: {
+      item: {
+        onclick: function (id) {
+          selection.characterId = nameIdMapper[id];
+          selection.screen = 1;
+          display();
+        } 
       }
     }
   });
@@ -639,17 +664,30 @@ function displayCharacter(){
   pointDiffColumns.fill(null);
 //  var rankColumns = new Array(modifiedCurrentPeriod.length);
   for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
-
-
-
-    //snapshotList[snapshotIndex]
+    var timeIndex = timeIndexMapper[snapshotIndex];
+    var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+    if(rankIndex != null){
+      pointColumns[timeIndex] = snapshotList[snapshotIndex].rankList[rankIndex].point;
+    }
+    pointDiffColumns[timeIndex] = snapshotList[snapshotIndex].diffs[selection.characterId];
   }
-/*
+
   var point = c3.generate({
     bindto: '#characterPoint',
     data: {
       x : 'x',
-      columns: [['x'].concat(modifiedCurrentPeriod)].concat(['スコア'].concat(pointColumns), ['差分'].concat(pointDiffColumns))
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat([['スコア'].concat(pointColumns)], [['差分'].concat(pointDiffColumns)]),
+      types: {
+        'スコア' : 'line',
+        '差分' : 'bar'
+      },
+      axes: {
+        'スコア': 'y',
+        '差分': 'y2'
+      },
+      colors: {
+        '差分' : '#2e8b57'
+      }
     },
     axis: {
       x: {
@@ -662,10 +700,15 @@ function displayCharacter(){
         tick: {
           format: raceConfig.numberFormatter
         }
+      },
+      y2: {
+        show: true,
+        tick: {
+          format: raceConfig.numberFormatter
+        }
       }
-    }
+    },
   });
-  */
 
 }
 
