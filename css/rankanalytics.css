@@ -26,7 +26,17 @@
     font-size: 150%;
     color:black;
 }
-   
+
+.ra-ct-normal {
+    font-size: 120%;
+    color:black;
+}
+
 .ra-template {
  display: none;
 }
+
+.ra-hidden {
+ display: none;
+}
+   

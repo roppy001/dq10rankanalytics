@@ -127,7 +127,7 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
-  "slimerace5" : {
+  slimerace5 : {
     title : '第5回スライムレース',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
@@ -137,7 +137,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_LINEAR,
     rankBorder : 100
   },
-  "casinoraid3" : {
+  casinoraid3 : {
     title : 'デモ用データ(期間2倍化)',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
@@ -147,7 +147,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
-  "casinoraid2" : {
+  casinoraid2 : {
     title : '第2回カジノレイド',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
@@ -157,7 +157,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
-  "casinoraid1" : {
+  casinoraid1 : {
     title : '第1回カジノレイド',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
@@ -167,7 +167,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
-  "fishing5" : {
+  fishing5 : {
     title : 'デモ用データ(期間2倍化)',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -177,7 +177,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing4" : {
+  fishing4 : {
     title : '第4回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -187,7 +187,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing3" : {
+  fishing3 : {
     title : '第3回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -197,7 +197,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing2" : {
+  fishing2 : {
     title : '第2回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -207,7 +207,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "fishing1" : {
+  fishing1 : {
     title : '第1回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
@@ -217,7 +217,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
-  "pencil5" : {
+  pencil5 : {
     title : '第2回マイデッキルール',
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -227,7 +227,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
-  "pencil4" : {
+  pencil4 : {
     title : '第2回タクティカルピックルール',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
@@ -237,7 +237,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
-  "pencil3" : {
+  pencil3 : {
     title : '第1回マイデッキルール',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
@@ -247,7 +247,7 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
-  "pencil2" : {
+  pencil2 : {
     title : '第1回タクティカルピックルール',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
@@ -270,30 +270,93 @@ var TARGET_RANK_LOWER_INTERVAL = 10;
 var DISPLAY_RANK_UPPER_INTERVAL = 10;
 var DISPLAY_RANK_LOWER_INTERVAL = 10;
 
+// キャラ個別画面で表示される履歴の最大数
+var DISPLAY_HISTORY_NUM = 4;
+
 // レースデータ保持領域
 var data;
 
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
-  "screen" : 0,
-  "raceType" : "slimerace",
-  "round" : 5,
-  "race" : "slimerace5",
-  "subrace" : 0,
-  "targetRank" : 1,
-  "targetRankInterval" : 10
+  screen : 0,
+  raceType : "slimerace",
+  round : 5,
+  race : "slimerace5",
+  subrace : 0,
+  targetRank : 1,
+  targetRankInterval : 10,
+  characterId : 0
 };
 
 var selection = Object.create(initialSelection);
 
+var nameIdMapper;
+
 var currentPeriod;
+var modifiedCurrentPeriod;
 var allPeriod;
+var timeIndexMapperAll;
+var timeIndexMapper;
 
 var subraceSelectionTemplate;
 var raceTypeSelectionTemplate;
 var roundSelectionTemplate;
+var characterTableTemplate;
+
+function timeStringFormatter(d){
+  return d.getFullYear() +'/' + (d.getMonth() + 1) +'/'+ d.getDate() + ' ' + d.getHours() + '時'
+}
+
+function calculateTimeMappers(snapshotList){
+  // データの存在しない時刻を判定するための配列
+  var emptyTimes = new Array(currentPeriod.length);
+  emptyTimes.fill(true);
+  emptyTimes[0] = false;
+
+  // スナップショットのIndexからallPetiodの時刻Indexを逆引きする配列を作成
+  timeIndexMapperAll = new Array(snapshotList.length);
+
+  // 欠けている時刻を判定する。
+  for (var i = 0,j = 0; i < snapshotList.length; i++) {
+    var snapshotTime = snapshotList[i].date;
+
+    while(j < currentPeriod.length && currentPeriod[j] < snapshotTime){
+      j++;
+    }
+
+    var k=Math.min(j,currentPeriod.length - 1);
+    timeIndexMapperAll[i]=k;
+    emptyTimes[k]=false;
+  }
+
+  // 欠けている時刻を除去した新たなX軸データを作成する
+  modifiedCurrentPeriod = currentPeriod.slice();
+
+  for (var i = modifiedCurrentPeriod.length-1;i>=0;i--){
+    if(emptyTimes[i]){
+      modifiedCurrentPeriod.splice(i,1);
+    }
+  }
+
+  // スナップショットのIndexからmodifiedCurrentPeriodの時刻Indexを逆引きする配列を作成
+  timeIndexMapper = new Array(snapshotList.length);
+
+  for (var i = 0,j = 0; i < snapshotList.length; i++) {
+    var snapshotTime = snapshotList[i].date;
+
+    while(j < modifiedCurrentPeriod.length && modifiedCurrentPeriod[j] < snapshotTime){
+      j++;
+    }
+
+    timeIndexMapper[i] = Math.min(j,modifiedCurrentPeriod.length - 1);
+  }
+}
+
 
 function displayDashboard(){
+  $('#dashboard').removeClass('ra-hidden');
+  $('#selectDashboard').addClass('active');
+
   for(var i=0;i<4;i++) {
     $('#border' + i + ' .borderName').text('');
     $('#border' + i + ' .latest').text('');
@@ -301,8 +364,6 @@ function displayDashboard(){
   }
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
-
-  $('#raceTitle').text(raceConfig.title);
 
   var snapshotList = data.subraceList[selection.subrace].snapshotList;
 
@@ -338,8 +399,6 @@ function displayDashboard(){
     return;
   }  
 
-  var currentTime = new Date(snapshotList[snapshotList.length - 1].timeString);
-
   $('#displayRankString').text(
     selection.targetRank + '位～' + endRank + '位');
 
@@ -350,50 +409,9 @@ function displayDashboard(){
   // 最新時刻のランキング者を表示対象として記憶する
   var displayIds = new Array(rankLength);
 
-  // データの存在しない時刻を判定するための配列
-  var emptyTimes = new Array(currentPeriod.length);
-  emptyTimes.fill(true);
-  emptyTimes[0] = false;
+  calculateTimeMappers(snapshotList);
 
-  // スナップショットのIndexからallPetiodの時刻Indexを逆引きする配列を作成
-  var timeIndexMapperAll = new Array(snapshotList.length);
-
-  // 欠けている時刻を判定する。
-  for (var i = 0,j = 0; i < snapshotList.length; i++) {
-    var snapshotTime = new Date(snapshotList[i].timeString);
-
-    while(j < currentPeriod.length && currentPeriod[j] < snapshotTime){
-      j++;
-    }
-
-    var k=Math.min(j,currentPeriod.length - 1);
-    timeIndexMapperAll[i]=k;
-    emptyTimes[k]=false;
-  }
-
-  // 欠けている時刻を除去した新たなX軸データを作成する
-  var modifiedCurrentPeriod = currentPeriod.slice();
-
-  for (var i = modifiedCurrentPeriod.length-1;i>=0;i--){
-    if(emptyTimes[i]){
-      modifiedCurrentPeriod.splice(i,1);
-    }
-  }
-
-  // スナップショットのIndexからmodifiedCurrentPeriodの時刻Indexを逆引きする配列を作成
-  var timeIndexMapper = new Array(snapshotList.length);
-
-  for (var i = 0,j = 0; i < snapshotList.length; i++) {
-    var snapshotTime = new Date(snapshotList[i].timeString);
-
-    while(j < modifiedCurrentPeriod.length && modifiedCurrentPeriod[j] < snapshotTime){
-      j++;
-    }
-
-    timeIndexMapper[i] = Math.min(j,modifiedCurrentPeriod.length - 1);
-  }
-  
-
+  nameIdMapper = {};
 
   for (var i = 0,nameMap = {}; i < rankLength; i++) {
     rankColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
@@ -402,7 +420,8 @@ function displayDashboard(){
     pointColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
     pointColumns[i].fill(null, 1);
 
-    displayIds[i] = snapshotList[snapshotList.length - 1].rankList[startIndex +i].id;
+    var id = snapshotList[snapshotList.length - 1].rankList[startIndex +i].id;
+    displayIds[i] = id;
 
     var name = snapshotList[snapshotList.length - 1].rankList[startIndex +i].name;
 
@@ -413,6 +432,8 @@ function displayDashboard(){
       nameMap[name] = 1;
     }
 
+    nameIdMapper[name] = id;
+
     rankColumns[i][0] = name;
     pointColumns[i][0] = name;
   }
@@ -422,6 +443,7 @@ function displayDashboard(){
     for (var i = 0; i < snapshotList[snapshotIndex].rankList.length; i++) {
       var currentId = snapshotList[snapshotIndex].rankList[i].id;
       var columnIndex = displayIds.indexOf(currentId);
+
       if (columnIndex != -1) {
         pointColumns[columnIndex][1 + timeIndexMapper[snapshotIndex]] = snapshotList[snapshotIndex].rankList[i].point;
 
@@ -511,11 +533,16 @@ function displayDashboard(){
   }
 
 
-  var top = c3.generate({
+  var rank = c3.generate({
     bindto: '#rank',
     data: {
       x : 'x',
-      columns: [['x'].concat(modifiedCurrentPeriod)].concat(rankColumns)
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat(rankColumns),
+      onclick : function (d, element) {
+        selection.characterId = nameIdMapper[d.id];
+        selection.screen = 1;
+        display();
+      }
     },
     axis: {
       x: {
@@ -529,6 +556,15 @@ function displayDashboard(){
           format: function (x) { return -x; }
         }
       }
+    },
+    legend: {
+      item: {
+        onclick: function (id) {
+          selection.characterId = nameIdMapper[id];
+          selection.screen = 1;
+          display();
+        } 
+      }
     }
   });
 
@@ -536,7 +572,12 @@ function displayDashboard(){
     bindto: '#point',
     data: {
       x : 'x',
-      columns: [['x'].concat(modifiedCurrentPeriod)].concat(pointColumns)
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat(pointColumns),
+      onclick : function (d, element) {
+        selection.characterId = nameIdMapper[d.id];
+        selection.screen = 1;
+        display();
+      }
     },
     axis: {
       x: {
@@ -549,6 +590,15 @@ function displayDashboard(){
         tick: {
           format: raceConfig.numberFormatter
         }
+      }
+    },
+    legend: {
+      item: {
+        onclick: function (id) {
+          selection.characterId = nameIdMapper[id];
+          selection.screen = 1;
+          display();
+        } 
       }
     }
   });
@@ -580,12 +630,142 @@ function displayDashboard(){
   });
 }
 
+function displayCharacter(){
+  $('#character').removeClass('ra-hidden');
+  $('#selectCharacter').addClass('active');
+
+  var raceConfig = RACE_CONFIG_MAP[selection.race];
+
+  var snapshotList = data.subraceList[selection.subrace].snapshotList;
+  var name = data.subraceList[selection.subrace].displayNameList[selection.characterId].name;
+
+  $('#characterPointTitle').text(name + 'のスコア');
+  $('#characterRankTitle').text(name + 'の順位');
+  $('#characterTableTitle').text(name + 'の履歴');
+  $('#characterStrengthTitle').text(name + 'の強さ');
+  
+  calculateTimeMappers(snapshotList);
+
+  // キャラクターデータを表示
+  var parentDom = $('#characterTable');
+  parentDom.find('.ra-dynamic').remove();
+  
+  for(var i = snapshotList.length-1;
+      i>snapshotList.length-1-DISPLAY_HISTORY_NUM && i>=0;i--){
+
+    var newDom = characterTableTemplate.clone();
+    var j = snapshotList[i].idMapper[selection.characterId];
+
+    if(j == null){
+      newDom.children('.rank').text('-');
+      newDom.children('.point').text('(ランク外)');
+    } else {
+      newDom.children('.rank').text(snapshotList[i].rankList[j].rank+'位');
+      newDom.children('.point').text(raceConfig.numberFormatter(snapshotList[i].rankList[j].point));
+    }
+    newDom.children('.date').text(timeStringFormatter(snapshotList[i].date));
+    parentDom.append(newDom);
+  }
+
+  var pointColumns = new Array(modifiedCurrentPeriod.length);
+  pointColumns.fill(null);
+  var pointDiffColumns = new Array(modifiedCurrentPeriod.length);
+  pointDiffColumns.fill(null);
+  var rankColumns = new Array(modifiedCurrentPeriod.length);
+  rankColumns.fill(null);
+
+//  var rankColumns = new Array(modifiedCurrentPeriod.length);
+  for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+    var timeIndex = timeIndexMapper[snapshotIndex];
+    var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+    if(rankIndex != null){
+      pointColumns[timeIndex] = snapshotList[snapshotIndex].rankList[rankIndex].point;
+      rankColumns[timeIndex] = -snapshotList[snapshotIndex].rankList[rankIndex].rank;
+    }
+    pointDiffColumns[timeIndex] = snapshotList[snapshotIndex].diffs[selection.characterId];
+  }
+
+  var point = c3.generate({
+    bindto: '#characterPoint',
+    data: {
+      x : 'x',
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat([['スコア'].concat(pointColumns)], [['差分'].concat(pointDiffColumns)]),
+      types: {
+        'スコア' : 'line',
+        '差分' : 'bar'
+      },
+      axes: {
+        'スコア': 'y',
+        '差分': 'y2'
+      },
+      colors: {
+        '差分' : '#2e8b57'
+      }
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%m/%d %H'
+        }
+      },
+      y: {
+        tick: {
+          format: raceConfig.numberFormatter
+        }
+      },
+      y2: {
+        show: true,
+        tick: {
+          format: raceConfig.numberFormatter
+        }
+      }
+    },
+  });
+
+  var rank = c3.generate({
+    bindto: '#characterRank',
+    data: {
+      x : 'x',
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat([['ランク'].concat(rankColumns)])
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%m/%d %H'
+        }
+      },
+      y: {
+        tick: {
+          format: function (x) { return -x; }
+        }
+      },
+    },
+  });
+
+}
+
 function display(){
+  $('#dashboard').addClass('ra-hidden');
+  $('#selectDashboard').removeClass('active');
+  $('#character').addClass('ra-hidden');
+  $('#selectCharacter').removeClass('active');
+
+  var raceConfig = RACE_CONFIG_MAP[selection.race];
+  $('#raceTitle').text(raceConfig.title);
+
+  var snapshotList = data.subraceList[0].snapshotList;
+  $('#currentTime').text(timeStringFormatter(snapshotList[snapshotList.length - 1].date));
+
   switch (selection.screen){
     case 0:
       displayDashboard();
       break;
-  }
+    case 1:
+      displayCharacter();
+      break;
+    }
 }
 
 function resetSubraceSelection(){
@@ -603,6 +783,7 @@ function resetSubraceSelection(){
 
     newDom.on('click', {index : i} , function(e){
       selection.subrace = e.data.index;
+      selection.screen = 0;
 
       resetSubraceSelection();
       display();
@@ -634,12 +815,12 @@ function calculate(){
       }
   }
 
-  // ランキングからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
   for(var i = 0; i< data.subraceList.length ; i++){
-    var mapper = new Array(raceConfig.rankBorder);
     var snapshotList = data.subraceList[i].snapshotList;
 
+    // ランキングからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
     for(var j=0;j<snapshotList.length;j++) {
+      var mapper = new Array(raceConfig.rankBorder);
       var rankList = snapshotList[j].rankList;
       // 該当の順位に対し、データが無い場合はそれより上位のデータを参照する。
       // ただし、1位の場合はデータが存在する最上位のデータを参照することとする。
@@ -650,8 +831,47 @@ function calculate(){
         mapper[rankIndex] = rankListIndex;
       }
       snapshotList[j]['rankMapper']=mapper;
+      // 各snapshotのDate情報を格納する。ただし、イベント期間よりも後の時刻はイベント期間最終日時に修正される
+      var d = new Date(snapshotList[j].timeString);
+      if(d >= raceConfig.endTime) {
+        d = raceConfig.endTime; 
+      }
+
+      snapshotList[j]['date'] = d;
     }
 
+    // idからrankListのインデックスの逆引き配列を計算し、snapshotList配下に追加する
+    for(var j=0;j<snapshotList.length;j++) {
+      var mapper = new Array(data.subraceList[i].displayNameList.length);
+      mapper.fill(null);
+
+      var rankList = snapshotList[j].rankList;
+      // 該当の順位に対し、データが無い場合はそれより上位のデータを参照する。
+      // ただし、1位の場合はデータが存在する最上位のデータを参照することとする。
+      for(var rankListIndex = 0; rankListIndex< rankList.length ; rankListIndex++){
+        mapper[rankList[rankListIndex].id] = rankListIndex;
+      }
+      snapshotList[j]['idMapper']=mapper;
+    }
+
+    // キャラクターごとの前日との差分を計算し、snaphostList配下に追加する
+    for(var j=0;j<snapshotList.length;j++) {
+      var characterLength = data.subraceList[i].displayNameList.length
+      var diffs = new Array(characterLength);
+      diffs.fill(null);
+
+      if(j>0) {
+        for(var characterIndex = 0;characterIndex < characterLength;characterIndex++) {
+          var currentIndex = snapshotList[j].idMapper[characterIndex];
+          var previousIndex = snapshotList[j-1].idMapper[characterIndex];
+          if(currentIndex != null && previousIndex != null){
+            diffs[characterIndex] = snapshotList[j].rankList[currentIndex].point - snapshotList[j-1].rankList[previousIndex].point;
+          }
+        }
+      }
+
+      snapshotList[j]['diffs']=diffs;
+    }
 
   }
 
@@ -740,9 +960,16 @@ function initSelectionTemplate() {
   roundSelectionTemplate.addClass('ra-dynamic');
   tempDom.remove();
 
+  tempDom = $('#characterTable .ra-template');
+  characterTableTemplate = tempDom.clone();
+  characterTableTemplate.removeClass('ra-template');
+  characterTableTemplate.addClass('ra-dynamic');
+  tempDom.remove();
+
 }
 
-function initRaceType(){
+function initHeader(){
+  //レースタイプ選択肢を設定
   var parentDom = $('#raceTypeSelection');
   parentDom.children('.ra-dynamic').remove();
 
@@ -762,13 +989,28 @@ function initRaceType(){
 
     parentDom.append(newDom)
   }
+
+  //画面切り替えイベントを設定
+  $('#selectDashboard').on('click',function(){
+    selection.screen = 0;
+    display();
+  });
+
+  $('#selectCharacter').on('click',function(){
+    selection.screen = 1;
+    selection.characterId = 0;
+    display();
+  });
+
 }
 
 $(function () {
   initSelectionTemplate();
-  initRaceType();
+  initHeader();
   setRound();
   resetSubraceSelection();
   initEventHandler();
   reloadRaceData();
 });
+
+
