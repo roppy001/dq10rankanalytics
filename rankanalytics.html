@@ -122,7 +122,7 @@
         <button type="button" class="btn btn-default glyphicon glyphicon-chevron-left" id="rankIndexLeft"></button>
         <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right" id="rankIndexRight"></button>
       </div>
-  </div>
+    </div>
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <div class="text-center">順位遷移グラフ</div>
@@ -139,44 +139,33 @@
   <div id="character" class="container-fluid">
     <div class="row">
       <div class="col-xs-12 col-sm-6">
-        <div class="text-center">スコア境界値</div>
-        <table class="table">
+        <div id="characterTableTitle" class="text-center"></div>
+        <table id="characterTable" class="table">
           <tr>
-            <th>境界</th>
-            <th>最新</th>
-            <th>最終日予測</th>
+            <th>順位</th>
+            <th>スコア</th>
+            <th>日付</th>
           </tr>
-          <tr class="ra-db-gold">
-            <td class="borderName"></td>
-            <td class="latest"></td>
-            <td class="prediction"></td>
-          </tr>
-          <tr class="ra-db-silver">
-            <td class="borderName"></td>
-            <td class="latest"></td>
-            <td class="prediction"></td>
-          </tr>
-          <tr class="ra-db-bronze">
-            <td class="borderName"></td>
-            <td class="latest"></td>
-            <td class="prediction"></td>
-          </tr>
-          <tr class="ra-db-normal">
-            <td class="borderName"></td>
-            <td class="latest"></td>
-            <td class="prediction"></td>
+          <tr class="ra-ct-normal ra-template">
+            <td class="rank"></td>
+            <td class="point"></td>
+            <td class="date"></td>
           </tr>
         </table>
       </div>
       <div class="col-xs-12 col-sm-6">
-        <div class="text-center">キャラの強さ</div>
-        <canvas id="strength"></div>
+        <div id="characterStrengthTitle" class="text-center"></div>
+        <canvas id="characterStrength"></canvas>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-12">
-        <div class="text-center">キャラ別遷移グラフ</div>
-        <div id="character"></div>
+      <div class="col-xs-12 col-sm-6">
+        <div id="characterPointTitle" class="text-center"></div>
+        <div id="characterPoint"></div>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div id="characterRankTitle"class="text-center"></div>
+        <div id="characterRank"></div>
       </div>
     </div>
   </div>

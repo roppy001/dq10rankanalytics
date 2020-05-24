@@ -270,6 +270,9 @@ var TARGET_RANK_LOWER_INTERVAL = 10;
 var DISPLAY_RANK_UPPER_INTERVAL = 10;
 var DISPLAY_RANK_LOWER_INTERVAL = 10;
 
+// キャラ個別画面で表示される履歴の最大数
+var DISPLAY_HISTORY_NUM = 4;
+
 // レースデータ保持領域
 var data;
 
@@ -288,11 +291,65 @@ var initialSelection = {
 var selection = Object.create(initialSelection);
 
 var currentPeriod;
+var modifiedCurrentPeriod;
 var allPeriod;
+var timeIndexMapperAll;
+var timeIndexMapper;
 
 var subraceSelectionTemplate;
 var raceTypeSelectionTemplate;
 var roundSelectionTemplate;
+var characterTableTemplate;
+
+function timeStringFormatter(d){
+  return d.getFullYear() +'/' + (d.getMonth() + 1) +'/'+ d.getDate() + ' ' + d.getHours() + '時'
+}
+
+function calculateTimeMappers(snapshotList){
+  // データの存在しない時刻を判定するための配列
+  var emptyTimes = new Array(currentPeriod.length);
+  emptyTimes.fill(true);
+  emptyTimes[0] = false;
+
+  // スナップショットのIndexからallPetiodの時刻Indexを逆引きする配列を作成
+  timeIndexMapperAll = new Array(snapshotList.length);
+
+  // 欠けている時刻を判定する。
+  for (var i = 0,j = 0; i < snapshotList.length; i++) {
+    var snapshotTime = snapshotList[i].date;
+
+    while(j < currentPeriod.length && currentPeriod[j] < snapshotTime){
+      j++;
+    }
+
+    var k=Math.min(j,currentPeriod.length - 1);
+    timeIndexMapperAll[i]=k;
+    emptyTimes[k]=false;
+  }
+
+  // 欠けている時刻を除去した新たなX軸データを作成する
+  modifiedCurrentPeriod = currentPeriod.slice();
+
+  for (var i = modifiedCurrentPeriod.length-1;i>=0;i--){
+    if(emptyTimes[i]){
+      modifiedCurrentPeriod.splice(i,1);
+    }
+  }
+
+  // スナップショットのIndexからmodifiedCurrentPeriodの時刻Indexを逆引きする配列を作成
+  timeIndexMapper = new Array(snapshotList.length);
+
+  for (var i = 0,j = 0; i < snapshotList.length; i++) {
+    var snapshotTime = snapshotList[i].date;
+
+    while(j < modifiedCurrentPeriod.length && modifiedCurrentPeriod[j] < snapshotTime){
+      j++;
+    }
+
+    timeIndexMapper[i] = Math.min(j,modifiedCurrentPeriod.length - 1);
+  }
+}
+
 
 function displayDashboard(){
   $('#dashboard').removeClass('ra-hidden');
@@ -305,8 +362,6 @@ function displayDashboard(){
   }
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
-
-  $('#raceTitle').text(raceConfig.title);
 
   var snapshotList = data.subraceList[selection.subrace].snapshotList;
 
@@ -352,50 +407,7 @@ function displayDashboard(){
   // 最新時刻のランキング者を表示対象として記憶する
   var displayIds = new Array(rankLength);
 
-  // データの存在しない時刻を判定するための配列
-  var emptyTimes = new Array(currentPeriod.length);
-  emptyTimes.fill(true);
-  emptyTimes[0] = false;
-
-  // スナップショットのIndexからallPetiodの時刻Indexを逆引きする配列を作成
-  var timeIndexMapperAll = new Array(snapshotList.length);
-
-  // 欠けている時刻を判定する。
-  for (var i = 0,j = 0; i < snapshotList.length; i++) {
-    var snapshotTime = snapshotList[i].date;
-
-    while(j < currentPeriod.length && currentPeriod[j] < snapshotTime){
-      j++;
-    }
-
-    var k=Math.min(j,currentPeriod.length - 1);
-    timeIndexMapperAll[i]=k;
-    emptyTimes[k]=false;
-  }
-
-  // 欠けている時刻を除去した新たなX軸データを作成する
-  var modifiedCurrentPeriod = currentPeriod.slice();
-
-  for (var i = modifiedCurrentPeriod.length-1;i>=0;i--){
-    if(emptyTimes[i]){
-      modifiedCurrentPeriod.splice(i,1);
-    }
-  }
-
-  // スナップショットのIndexからmodifiedCurrentPeriodの時刻Indexを逆引きする配列を作成
-  var timeIndexMapper = new Array(snapshotList.length);
-
-  for (var i = 0,j = 0; i < snapshotList.length; i++) {
-    var snapshotTime = snapshotList[i].date;
-
-    while(j < modifiedCurrentPeriod.length && modifiedCurrentPeriod[j] < snapshotTime){
-      j++;
-    }
-
-    timeIndexMapper[i] = Math.min(j,modifiedCurrentPeriod.length - 1);
-  }
-  
-
+  calculateTimeMappers(snapshotList);
 
   for (var i = 0,nameMap = {}; i < rankLength; i++) {
     rankColumns[i] = new Array(modifiedCurrentPeriod.length + 1);
@@ -586,6 +598,75 @@ function displayDashboard(){
 function displayCharacter(){
   $('#character').removeClass('ra-hidden');
   $('#selectCharacter').addClass('active');
+
+  var raceConfig = RACE_CONFIG_MAP[selection.race];
+
+  var snapshotList = data.subraceList[selection.subrace].snapshotList;
+  var name = data.subraceList[selection.subrace].displayNameList[selection.characterId].name;
+
+  $('#characterPointTitle').text(name + 'のスコア');
+  $('#characterRankTitle').text(name + 'の順位');
+  $('#characterTableTitle').text(name + 'の履歴');
+  $('#characterStrengthTitle').text(name + 'の強さ');
+  
+  calculateTimeMappers(snapshotList);
+
+  // キャラクターデータを表示
+  var parentDom = $('#characterTable');
+  parentDom.find('.ra-dynamic').remove();
+  
+  for(var i = snapshotList.length-1;
+      i>snapshotList.length-1-DISPLAY_HISTORY_NUM && i>=0;i--){
+
+    var newDom = characterTableTemplate.clone();
+    var j = snapshotList[i].idMapper[selection.characterId];
+
+    if(j == null){
+      newDom.children('.rank').text('-');
+      newDom.children('.point').text('(ランク外)');
+    } else {
+      newDom.children('.rank').text(snapshotList[i].rankList[j].rank+'位');
+      newDom.children('.point').text(raceConfig.numberFormatter(snapshotList[i].rankList[j].point));
+    }
+    newDom.children('.date').text(timeStringFormatter(snapshotList[i].date));
+    parentDom.append(newDom);
+  }
+
+
+  var pointColumns = new Array(modifiedCurrentPeriod.length);
+  pointColumns.fill(null);
+  var pointDiffColumns = new Array(modifiedCurrentPeriod.length);
+  pointDiffColumns.fill(null);
+//  var rankColumns = new Array(modifiedCurrentPeriod.length);
+  for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+
+
+
+    //snapshotList[snapshotIndex]
+  }
+/*
+  var point = c3.generate({
+    bindto: '#characterPoint',
+    data: {
+      x : 'x',
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat(['スコア'].concat(pointColumns), ['差分'].concat(pointDiffColumns))
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%m/%d %H'
+        }
+      },
+      y: {
+        tick: {
+          format: raceConfig.numberFormatter
+        }
+      }
+    }
+  });
+  */
+
 }
 
 function display(){
@@ -598,8 +679,7 @@ function display(){
   $('#raceTitle').text(raceConfig.title);
 
   var snapshotList = data.subraceList[0].snapshotList;
-  var currentTime = snapshotList[snapshotList.length - 1].date;
-  $('#currentTime').text(currentTime.getFullYear() +'/' + (currentTime.getMonth() + 1) +'/'+ currentTime.getDate() + ' ' + currentTime.getHours() + '時');
+  $('#currentTime').text(timeStringFormatter(snapshotList[snapshotList.length - 1].date));
 
   switch (selection.screen){
     case 0:
@@ -626,6 +706,7 @@ function resetSubraceSelection(){
 
     newDom.on('click', {index : i} , function(e){
       selection.subrace = e.data.index;
+      selection.screen = 0;
 
       resetSubraceSelection();
       display();
@@ -694,6 +775,25 @@ function calculate(){
         mapper[rankList[rankListIndex].id] = rankListIndex;
       }
       snapshotList[j]['idMapper']=mapper;
+    }
+
+    // キャラクターごとの前日との差分を計算し、snaphostList配下に追加する
+    for(var j=0;j<snapshotList.length;j++) {
+      var characterLength = data.subraceList[i].displayNameList.length
+      var diffs = new Array(characterLength);
+      diffs.fill(null);
+
+      if(j>0) {
+        for(var characterIndex = 0;characterIndex < characterLength;characterIndex++) {
+          var currentIndex = snapshotList[j].idMapper[characterIndex];
+          var previousIndex = snapshotList[j-1].idMapper[characterIndex];
+          if(currentIndex != null && previousIndex != null){
+            diffs[characterIndex] = snapshotList[j].rankList[currentIndex].point - snapshotList[j-1].rankList[previousIndex].point;
+          }
+        }
+      }
+
+      snapshotList[j]['diffs']=diffs;
     }
 
   }
@@ -783,6 +883,12 @@ function initSelectionTemplate() {
   roundSelectionTemplate.addClass('ra-dynamic');
   tempDom.remove();
 
+  tempDom = $('#characterTable .ra-template');
+  characterTableTemplate = tempDom.clone();
+  characterTableTemplate.removeClass('ra-template');
+  characterTableTemplate.addClass('ra-dynamic');
+  tempDom.remove();
+
 }
 
 function initHeader(){
@@ -815,6 +921,7 @@ function initHeader(){
 
   $('#selectCharacter').on('click',function(){
     selection.screen = 1;
+    selection.characterId = 0;
     display();
   });
 
