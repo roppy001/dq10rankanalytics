@@ -667,17 +667,20 @@ function displayCharacter(){
     parentDom.append(newDom);
   }
 
-
   var pointColumns = new Array(modifiedCurrentPeriod.length);
   pointColumns.fill(null);
   var pointDiffColumns = new Array(modifiedCurrentPeriod.length);
   pointDiffColumns.fill(null);
+  var rankColumns = new Array(modifiedCurrentPeriod.length);
+  rankColumns.fill(null);
+
 //  var rankColumns = new Array(modifiedCurrentPeriod.length);
   for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
     var timeIndex = timeIndexMapper[snapshotIndex];
     var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
     if(rankIndex != null){
       pointColumns[timeIndex] = snapshotList[snapshotIndex].rankList[rankIndex].point;
+      rankColumns[timeIndex] = -snapshotList[snapshotIndex].rankList[rankIndex].rank;
     }
     pointDiffColumns[timeIndex] = snapshotList[snapshotIndex].diffs[selection.characterId];
   }
@@ -717,6 +720,27 @@ function displayCharacter(){
           format: raceConfig.numberFormatter
         }
       }
+    },
+  });
+
+  var rank = c3.generate({
+    bindto: '#characterRank',
+    data: {
+      x : 'x',
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat([['ランク'].concat(rankColumns)])
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+        tick: {
+          format: '%m/%d %H'
+        }
+      },
+      y: {
+        tick: {
+          format: function (x) { return -x; }
+        }
+      },
     },
   });
 
