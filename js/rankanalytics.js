@@ -35,10 +35,6 @@ var RACE_TYPE_CONFIG_MAP = {
   }
 };
 
-
-// 各イベントの開催内容・開催期間情報を定義
-// 開始日時、終了日次はデータが更新される時刻である8時間区切りとする。
-
 var RACE_10_100_LINEAR = [
   {
     rankIndex : 0,
@@ -262,6 +258,54 @@ var RACE_CONFIG_MAP = {
 
 // 各レース情報定義領域 終了位置
 
+// 祝日データを定義
+// 12/30～1/3は祝日とみなす
+
+var HOLIDAYS = [
+  new Date('2020/1/1'),
+  new Date('2020/1/2'),
+  new Date('2020/1/3'),
+  new Date('2020/1/13'),
+  new Date('2020/2/11'),
+  new Date('2020/2/23'),
+  new Date('2020/2/24'),
+  new Date('2020/3/20'),
+  new Date('2020/4/29'),
+  new Date('2020/5/3'),
+  new Date('2020/5/4'),
+  new Date('2020/5/5'),
+  new Date('2020/5/6'),
+  new Date('2020/7/23'),
+  new Date('2020/7/24'),
+  new Date('2020/8/10'),
+  new Date('2020/9/21'),
+  new Date('2020/9/22'),
+  new Date('2020/11/3'),
+  new Date('2020/11/23'),
+  new Date('2020/12/30'),
+  new Date('2020/12/31'),
+  new Date('2021/1/1'),
+  new Date('2021/1/2'),
+  new Date('2021/1/3'),
+  new Date('2021/1/11'),
+  new Date('2021/2/11'),
+  new Date('2021/2/23'),
+  new Date('2021/3/20'),
+  new Date('2021/4/29'),
+  new Date('2021/5/3'),
+  new Date('2021/5/4'),
+  new Date('2021/5/5'),
+  new Date('2021/7/19'),
+  new Date('2021/8/11'),
+  new Date('2021/9/20'),
+  new Date('2021/9/23'),
+  new Date('2021/10/11'),
+  new Date('2021/11/3'),
+  new Date('2021/11/23'),
+  new Date('2021/12/30'),
+  new Date('2021/12/31'),
+    ];
+
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
 // この値分下位のキャラのデータを表示するようにする。
 var TARGET_RANK_LOWER_INTERVAL = 10;
@@ -272,6 +316,9 @@ var DISPLAY_RANK_LOWER_INTERVAL = 10;
 
 // キャラ個別画面で表示される履歴の最大数
 var DISPLAY_HISTORY_NUM = 4;
+
+// レーダーの直近サンプリング数
+var RADAR_SAMPLE_NUM = 3;
 
 // レースデータ保持領域
 var data;
@@ -302,6 +349,18 @@ var subraceSelectionTemplate;
 var raceTypeSelectionTemplate;
 var roundSelectionTemplate;
 var characterTableTemplate;
+
+var strengthRadarChart;
+
+function isHoliday(d) {
+  for(var i=0;i<HOLIDAYS.length;i++) {
+    var t=HOLIDAYS[i];
+    if(t.getFullYear() == d.getFullYear() && t.getMonth() == d.getMonth() && t.getDate() == d.getDate()){
+      return true;
+    }
+  }
+  return false;
+}
 
 function timeStringFormatter(d){
   return d.getFullYear() +'/' + (d.getMonth() + 1) +'/'+ d.getDate() + ' ' + d.getHours() + '時'
@@ -667,22 +726,25 @@ function displayCharacter(){
     parentDom.append(newDom);
   }
 
+  // ポイントグラフを生成
   var pointColumns = new Array(modifiedCurrentPeriod.length);
   pointColumns.fill(null);
   var pointDiffColumns = new Array(modifiedCurrentPeriod.length);
   pointDiffColumns.fill(null);
-  var rankColumns = new Array(modifiedCurrentPeriod.length);
-  rankColumns.fill(null);
 
-//  var rankColumns = new Array(modifiedCurrentPeriod.length);
   for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
     var timeIndex = timeIndexMapper[snapshotIndex];
     var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
     if(rankIndex != null){
       pointColumns[timeIndex] = snapshotList[snapshotIndex].rankList[rankIndex].point;
-      rankColumns[timeIndex] = -snapshotList[snapshotIndex].rankList[rankIndex].rank;
     }
-    pointDiffColumns[timeIndex] = snapshotList[snapshotIndex].diffs[selection.characterId];
+
+    if(snapshotList[snapshotIndex].diffCount > 0){
+      var d = snapshotList[snapshotIndex].diffs[selection.characterId];
+      if(d != null){
+        pointDiffColumns[timeIndex] = d/snapshotList[snapshotIndex].diffCount;
+      }
+    }
   }
 
   var point = c3.generate({
@@ -723,6 +785,17 @@ function displayCharacter(){
     },
   });
 
+  //ランクグラフを生成
+  var rankColumns = new Array(modifiedCurrentPeriod.length);
+  rankColumns.fill(null);
+  for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+    var timeIndex = timeIndexMapper[snapshotIndex];
+    var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+    if(rankIndex != null){
+      rankColumns[timeIndex] = -snapshotList[snapshotIndex].rankList[rankIndex].rank;
+    }
+  }
+
   var rank = c3.generate({
     bindto: '#characterRank',
     data: {
@@ -742,6 +815,92 @@ function displayCharacter(){
         }
       },
     },
+  });
+
+  // レーダーチャートグラフを生成
+  // 0:休日20-4、1:休日4-12、2:休日12-20、3:平日20-4、4:平日4-12、5:平日12-20
+  var allDiffs = new Array(6);
+  for(var i=0;i<6;i++){
+    allDiffs[i]=[];
+  }
+
+  for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+    var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+    if(rankIndex != null && snapshotList[snapshotIndex].diffCount==1){
+      var d = new Date(snapshotList[snapshotIndex].date);
+
+      // 午前4時の場合は前日の日付で休日判定を行う。
+      if(d.getHours() <= 4){
+        d.setDate(d.getDate()-1);
+      }
+
+      // 休日は、祝日もしくは土曜日もしくは日曜日とする
+      // index値を取得
+      var index = (d.getHours() - 4)/8 + ((d.getDay() == 0 || d.getDay() == 6 || isHoliday(d)) ? 0 : 3);
+
+      allDiffs[index].push(snapshotList[snapshotIndex].diffs[selection.characterId]);
+    }
+  }
+  var allAverage = new Array(6);
+  allAverage.fill(0);
+  var recentAverage = new Array(6);
+  recentAverage.fill(0);
+  for(var i=0;i<6;i++){
+    if(allDiffs[i].length > 0){
+      var total = 0;
+      for(var j=0;j<allDiffs[i].length;j++) {
+        total+=allDiffs[i][j];
+      }
+      allAverage[i]=Math.floor(total/allDiffs[i].length);
+
+      total = 0;
+      var recentDiffs = allDiffs[i].slice(Math.max(allDiffs[i].length-RADAR_SAMPLE_NUM,0));
+      for(var j=0;j<recentDiffs.length;j++) {
+        total+=recentDiffs[j];
+      }
+      recentAverage[i]=Math.floor(total/recentDiffs.length);
+    }
+  }
+
+
+  var maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * 0.5);
+
+  var ctx = $('#characterStrength');
+  if(strengthRadarChart){
+    strengthRadarChart.destroy();
+  }
+
+  strengthRadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['休日20-4','休日4-12','休日12-20','平日20-4','平日4-12','平日12-20'],
+      datasets : [{
+        label : '直近'+RADAR_SAMPLE_NUM+'回',
+        data : recentAverage,
+        borderColor :'rgb(255,105,180)',
+        backgroundColor :'rgba(255,105,180,0.4)'
+      },{
+        label : '全期間',
+        data : allAverage,
+        borderColor :'rgb(65,104,225)',
+        backgroundColor :'rgba(65,104,225,0.4)'
+      }]
+    }, 
+    options: {
+      legend: {
+         display: false
+      },
+      scale: {
+        ticks: {
+            maxTicksLimit : 5,
+            min : 0,
+            max : maxValue
+        }
+      },
+      tooltips: {
+        mode: 'index'
+      }
+    }  
   });
 
 }
@@ -855,23 +1014,39 @@ function calculate(){
     }
 
     // キャラクターごとの前日との差分を計算し、snaphostList配下に追加する
+    // 過去最高の差分値を計算する
+    var maxDiff=0;
+
     for(var j=0;j<snapshotList.length;j++) {
       var characterLength = data.subraceList[i].displayNameList.length
       var diffs = new Array(characterLength);
       diffs.fill(null);
 
       if(j>0) {
+        // 8時間刻みで前回のスナップショットから何回になるか計算。
+        // 基本1となることを期待
+        var diffCount = (snapshotList[j].date.getTime() - snapshotList[j-1].date.getTime())/1000/60/60/8;
+        snapshotList[j]['diffCount'] = diffCount;
+
         for(var characterIndex = 0;characterIndex < characterLength;characterIndex++) {
           var currentIndex = snapshotList[j].idMapper[characterIndex];
           var previousIndex = snapshotList[j-1].idMapper[characterIndex];
           if(currentIndex != null && previousIndex != null){
-            diffs[characterIndex] = snapshotList[j].rankList[currentIndex].point - snapshotList[j-1].rankList[previousIndex].point;
+            var d = snapshotList[j].rankList[currentIndex].point - snapshotList[j-1].rankList[previousIndex].point;
+            diffs[characterIndex] = d;
+            if(diffCount == 1){
+              maxDiff = Math.max(maxDiff,d);
+            }
           }
         }
+      } else {
+        snapshotList[j]['diffCount'] = 0;
       }
 
       snapshotList[j]['diffs']=diffs;
     }
+
+    data.subraceList[i]['maxDiff'] = maxDiff;
 
   }
 
@@ -1001,6 +1176,10 @@ function initHeader(){
     selection.characterId = 0;
     display();
   });
+
+}
+
+function initHoliday(){
 
 }
 
