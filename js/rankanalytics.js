@@ -537,7 +537,12 @@ function displayDashboard(){
     bindto: '#rank',
     data: {
       x : 'x',
-      columns: [['x'].concat(modifiedCurrentPeriod)].concat(rankColumns)
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat(rankColumns),
+      onclick : function (d, element) {
+        selection.characterId = nameIdMapper[d.id];
+        selection.screen = 1;
+        display();
+      }
     },
     axis: {
       x: {
@@ -567,7 +572,12 @@ function displayDashboard(){
     bindto: '#point',
     data: {
       x : 'x',
-      columns: [['x'].concat(modifiedCurrentPeriod)].concat(pointColumns)
+      columns: [['x'].concat(modifiedCurrentPeriod)].concat(pointColumns),
+      onclick : function (d, element) {
+        selection.characterId = nameIdMapper[d.id];
+        selection.screen = 1;
+        display();
+      }
     },
     axis: {
       x: {
