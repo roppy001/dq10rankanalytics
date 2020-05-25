@@ -695,13 +695,23 @@ function displayCharacter(){
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
 
+  if(raceConfig.predictionType == PREDICTION_TYPE_LINEAR){
+    $('#character').find('.ra-linear-only').removeClass('ra-hidden');
+  } else {
+    $('#character').find('.ra-linear-only').addClass('ra-hidden');
+  }
+
   var snapshotList = data.subraceList[selection.subrace].snapshotList;
   var name = data.subraceList[selection.subrace].displayNameList[selection.characterId].name;
+  var i = snapshotList[snapshotList.length-1].idMapper[selection.characterId];
+  var s = (i==null)?'ランク外':snapshotList[snapshotList.length-1].rankList[i].rank+'位';
 
+  $('#characterTitle').text('最新' + s + ' ' + name + 'のステータス');
   $('#characterPointTitle').text(name + 'のスコア');
   $('#characterRankTitle').text(name + 'の順位');
   $('#characterTableTitle').text(name + 'の履歴');
   $('#characterStrengthTitle').text(name + 'の強さ');
+
   
   calculateTimeMappers(snapshotList);
 
@@ -894,11 +904,20 @@ function displayCharacter(){
         ticks: {
             maxTicksLimit : 5,
             min : 0,
-            max : maxValue
+            max : maxValue,
+            callback : function(value, index, values) {return raceConfig.numberFormatter(value);}
         }
       },
       tooltips: {
-        mode: 'index'
+        mode: 'index',
+        callbacks: {
+          title : function(tooltipItem, data) {
+            return data.labels[tooltipItem[0].index];
+          },
+          label : function(tooltipItem, data) {
+            return data.datasets[tooltipItem.datasetIndex].label+':'+raceConfig.numberFormatter(tooltipItem.value);
+          }
+        }
       }
     }  
   });
@@ -1005,8 +1024,7 @@ function calculate(){
       mapper.fill(null);
 
       var rankList = snapshotList[j].rankList;
-      // 該当の順位に対し、データが無い場合はそれより上位のデータを参照する。
-      // ただし、1位の場合はデータが存在する最上位のデータを参照することとする。
+
       for(var rankListIndex = 0; rankListIndex< rankList.length ; rankListIndex++){
         mapper[rankList[rankListIndex].id] = rankListIndex;
       }
@@ -1048,26 +1066,60 @@ function calculate(){
 
     data.subraceList[i]['maxDiff'] = maxDiff;
 
-  }
+    // サブレース毎のキャラ別画面の表示順序を計算する
+    // 優先順位は、最終スナップショットでの順位、1つ前のスナップショットでの順位、・・・で計算する
+    var idSet={}
+    var characterIds=[];
+    var characterIdToIndex=new Array(data.subraceList[i].displayNameList.length);
+    characterIdToIndex.fill(0);
 
+    for(var j=snapshotList.length-1;j>=0;j--){
+      for(var k=0;k<snapshotList[j].rankList.length;k++){
+        var id = snapshotList[j].rankList[k].id;
+        if(!(id in idSet)){
+          idSet[id] = true;
+          characterIdToIndex[id]=characterIds.length;
+          characterIds.push(id);
+        }
+      }
+    }
+
+    data.subraceList[i]['characterIdToIndex']=characterIdToIndex;
+    data.subraceList[i]['characterIds']=characterIds;
+  }
 }
 
 function initEventHandler(){
-
-  $('#rankIndexLeft').off('click');
   $('#rankIndexLeft').on('click',function(){
     selection.targetRank -= selection.targetRankInterval;
     selection.targetRank = Math.max(selection.targetRank,1);
     display();
   });
 
-  $('#rankIndexRight').off('click');
   $('#rankIndexRight').on('click',function(){
     selection.targetRank += selection.targetRankInterval;
     selection.targetRank = Math.min(selection.targetRank,
       RACE_CONFIG_MAP[selection.race].rankBorder+1
       -selection.targetRankInterval
       -Math.floor(DISPLAY_RANK_LOWER_INTERVAL/selection.targetRankInterval)*selection.targetRankInterval);
+    display();
+  });
+
+  $('#characterIndexLeft').on('click',function(){
+    var characterIndex = data.subraceList[selection.subrace].characterIdToIndex[selection.characterId];
+    if(characterIndex>0){
+      characterIndex--;
+    }
+    selection.characterId=data.subraceList[selection.subrace].characterIds[characterIndex];
+    display();
+  });
+
+  $('#characterIndexRight').on('click',function(){
+    var characterIndex = data.subraceList[selection.subrace].characterIdToIndex[selection.characterId];
+    if(characterIndex<data.subraceList[selection.subrace].characterIds.length-1){
+      characterIndex++;
+    }
+    selection.characterId=data.subraceList[selection.subrace].characterIds[characterIndex];
     display();
   });
 }
@@ -1106,7 +1158,6 @@ function setRound() {
       selection.race = selection.raceType + selection.round;
 
       resetSubraceSelection();
-      initEventHandler();
       reloadRaceData();
     });
 
@@ -1158,7 +1209,6 @@ function initHeader(){
       selection.race = selection.raceType + selection.round;
       setRound();
       resetSubraceSelection();
-      initEventHandler();
       reloadRaceData();
     });
 
@@ -1168,27 +1218,37 @@ function initHeader(){
   //画面切り替えイベントを設定
   $('#selectDashboard').on('click',function(){
     selection.screen = 0;
+    var snapshotList = data.subraceList[selection.subrace].snapshotList;
+    var snapshot = snapshotList[snapshotList.length-1];
+    var rankListIndex = snapshot.idMapper[selection.characterId];
+
+    if(rankListIndex == null){
+      selection.targetRank = 1;
+    } else{
+      var r = snapshot.rankList[rankListIndex].rank;
+      selection.targetRank = r- ((r-1)%selection.targetRankInterval);
+    }
+
     display();
   });
 
   $('#selectCharacter').on('click',function(){
     selection.screen = 1;
-    selection.characterId = 0;
+    var snapshotList = data.subraceList[selection.subrace].snapshotList;
+    var snapshot = snapshotList[snapshotList.length-1];
+    var rankListIndex = snapshot.rankMapper[selection.targetRank-1];
+    selection.characterId = snapshot.rankList[rankListIndex].id;
     display();
   });
-
-}
-
-function initHoliday(){
 
 }
 
 $(function () {
   initSelectionTemplate();
   initHeader();
+  initEventHandler();
   setRound();
   resetSubraceSelection();
-  initEventHandler();
   reloadRaceData();
 });
 
