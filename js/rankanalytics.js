@@ -695,6 +695,12 @@ function displayCharacter(){
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
 
+  if(raceConfig.predictionType == PREDICTION_TYPE_LINEAR){
+    $('#character').find('.ra-linear-only').removeClass('ra-hidden');
+  } else {
+    $('#character').find('.ra-linear-only').addClass('ra-hidden');
+  }
+
   var snapshotList = data.subraceList[selection.subrace].snapshotList;
   var name = data.subraceList[selection.subrace].displayNameList[selection.characterId].name;
   var i = snapshotList[snapshotList.length-1].idMapper[selection.characterId];
@@ -705,6 +711,7 @@ function displayCharacter(){
   $('#characterRankTitle').text(name + 'の順位');
   $('#characterTableTitle').text(name + 'の履歴');
   $('#characterStrengthTitle').text(name + 'の強さ');
+
   
   calculateTimeMappers(snapshotList);
 
