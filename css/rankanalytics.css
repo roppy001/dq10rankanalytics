@@ -32,6 +32,11 @@
     color:black;
 }
 
+.ra-cs-normal {
+    font-size: 150%;
+    color:black;
+}
+
 .ra-template {
  display: none;
 }
