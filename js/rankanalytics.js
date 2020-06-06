@@ -5,6 +5,8 @@ var UPDATE_TYPE_EIGHT_HOURS = 0;
 var UPDATE_TYPE_ONE_DAY = 1;
 var INTERVAL_HOUR = [8, 24];
 
+var RADER_MAX_RATE = 0.6;
+
 // 各レース情報定義領域 開始位置
 
 var RACE_TYPE_CONFIG_MAP = {
@@ -860,56 +862,103 @@ function displayCharacter(){
     },
   });
 
-  // レーダーチャートグラフを生成
-  // 0:休日20-4、1:休日4-12、2:休日12-20、3:平日20-4、4:平日4-12、5:平日12-20
-  var allDiffs = new Array(6);
-  for(var i=0;i<6;i++){
-    allDiffs[i]=[];
-  }
 
-  for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
-    var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
-    if(rankIndex != null && snapshotList[snapshotIndex].diffCount==1){
-      var d = new Date(snapshotList[snapshotIndex].date);
-
-      // 午前4時の場合は前日の日付で休日判定を行う。
-      if(d.getHours() <= 4){
-        d.setDate(d.getDate()-1);
-      }
-
-      // 休日は、祝日もしくは土曜日もしくは日曜日とする
-      // index値を取得
-      var index = (d.getHours() - 4)/8 + ((d.getDay() == 0 || d.getDay() == 6 || isHoliday(d)) ? 0 : 3);
-
-      allDiffs[index].push(snapshotList[snapshotIndex].diffs[selection.characterId]);
+  var allAverage;
+  var recentAverage;
+  var labels;
+  var maxValue;
+  if(raceConfig.updateType == UPDATE_TYPE_ONE_DAY) {
+    // レーダーチャートグラフを生成
+    // 0:日、1:月、2:火、3:水、4:木、5:金、6:土
+    var allDiffs = new Array(7);
+    for(var i=0;i<7;i++){
+      allDiffs[i]=[];
     }
-  }
-  var allAverage = new Array(6);
-  allAverage.fill(0);
-  var recentAverage = new Array(6);
-  recentAverage.fill(0);
-  for(var i=0;i<6;i++){
-    if(allDiffs[i].length > 0){
-      var total = 0;
-      for(var j=0;j<allDiffs[i].length;j++) {
-        total+=allDiffs[i][j];
-      }
-      allAverage[i]=Math.floor(total/allDiffs[i].length);
 
-      total = 0;
-      var recentDiffs = allDiffs[i].slice(Math.max(allDiffs[i].length-RADAR_SAMPLE_NUM,0));
-      for(var j=0;j<recentDiffs.length;j++) {
-        total+=recentDiffs[j];
+    for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+      var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+      if(rankIndex != null && snapshotList[snapshotIndex].diffCount==1){
+        // 前日の曜日で差分を表示する
+        var index = (snapshotList[snapshotIndex].date.getDay() + 6)%7;
+
+        allDiffs[index].push(snapshotList[snapshotIndex].diffs[selection.characterId]);
       }
-      recentAverage[i]=Math.floor(total/recentDiffs.length);
     }
+    allAverage = new Array(7);
+    allAverage.fill(0);
+    recentAverage = new Array(7);
+    recentAverage.fill(0);
+    for(var i=0;i<7;i++){
+      if(allDiffs[i].length > 0){
+        var total = 0;
+        for(var j=0;j<allDiffs[i].length;j++) {
+          total+=allDiffs[i][j];
+        }
+        allAverage[i]=Math.floor(total/allDiffs[i].length);
+
+        total = 0;
+        var recentDiffs = allDiffs[i].slice(Math.max(allDiffs[i].length-RADAR_SAMPLE_NUM,0));
+        for(var j=0;j<recentDiffs.length;j++) {
+          total+=recentDiffs[j];
+        }
+        recentAverage[i]=Math.floor(total/recentDiffs.length);
+      }
+    }
+
+    labels = ['日','月','火','水','木','金','土'];
+
+    maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * RADER_MAX_RATE);
+
+  } else {
+    // レーダーチャートグラフを生成
+    // 0:休日20-4、1:休日4-12、2:休日12-20、3:平日20-4、4:平日4-12、5:平日12-20
+    var allDiffs = new Array(6);
+    for(var i=0;i<6;i++){
+      allDiffs[i]=[];
+    }
+
+    for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+      var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+      if(rankIndex != null && snapshotList[snapshotIndex].diffCount==1){
+        var d = new Date(snapshotList[snapshotIndex].date);
+
+        // 午前4時の場合は前日の日付で休日判定を行う。
+        if(d.getHours() <= 4){
+          d.setDate(d.getDate()-1);
+        }
+
+        // 休日は、祝日もしくは土曜日もしくは日曜日とする
+        // index値を取得
+        var index = (d.getHours() - 4)/8 + ((d.getDay() == 0 || d.getDay() == 6 || isHoliday(d)) ? 0 : 3);
+
+        allDiffs[index].push(snapshotList[snapshotIndex].diffs[selection.characterId]);
+      }
+    }
+    allAverage = new Array(6);
+    allAverage.fill(0);
+    recentAverage = new Array(6);
+    recentAverage.fill(0);
+    for(var i=0;i<6;i++){
+      if(allDiffs[i].length > 0){
+        var total = 0;
+        for(var j=0;j<allDiffs[i].length;j++) {
+          total+=allDiffs[i][j];
+        }
+        allAverage[i]=Math.floor(total/allDiffs[i].length);
+
+        total = 0;
+        var recentDiffs = allDiffs[i].slice(Math.max(allDiffs[i].length-RADAR_SAMPLE_NUM,0));
+        for(var j=0;j<recentDiffs.length;j++) {
+          total+=recentDiffs[j];
+        }
+        recentAverage[i]=Math.floor(total/recentDiffs.length);
+      }
+    }
+
+    labels = ['休日20-4','休日4-12','休日12-20','平日20-4','平日4-12','平日12-20'];
+
+    maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * RADER_MAX_RATE);
   }
-
-  var labels = ['休日20-4','休日4-12','休日12-20','平日20-4','平日4-12','平日12-20'];
-
-  var maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * 0.5);
-
-
 
   var ctx = $('#characterStrength');
   if(strengthRadarChart){
@@ -1079,7 +1128,7 @@ function calculate(){
       if(j>0) {
         // 8時間刻みで前回のスナップショットから何回になるか計算。
         // 基本1となることを期待
-        var diffCount = (snapshotList[j].date.getTime() - snapshotList[j-1].date.getTime())/1000/60/60/8;
+        var diffCount = (snapshotList[j].date.getTime() - snapshotList[j-1].date.getTime())/1000/60/60/INTERVAL_HOUR[raceConfig.updateType];
         snapshotList[j]['diffCount'] = diffCount;
 
         for(var characterIndex = 0;characterIndex < characterLength;characterIndex++) {
