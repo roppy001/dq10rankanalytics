@@ -1,6 +1,10 @@
 var PREDICTION_TYPE_LINEAR = 0;
 var PREDICTION_TYPE_RANGE = 1;
 
+var UPDATE_TYPE_EIGHT_HOURS = 0;
+var UPDATE_TYPE_ONE_DAY = 1;
+var INTERVAL_HOUR = [8, 24];
+
 // 各レース情報定義領域 開始位置
 
 var RACE_TYPE_CONFIG_MAP = {
@@ -132,8 +136,9 @@ var RACE_CONFIG_MAP = {
     title : '第1回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
-    beginTime : new Date(2020,5,2,20,0),
-    endTime : new Date(2020,8,27,20,0),
+    beginTime : new Date(2020,5,3,0,0),
+    endTime : new Date(2020,8,28,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -144,6 +149,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2020,0,9,12,00),
     endTime : new Date(2020,0,27,4,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_LINEAR,
     rankBorder : 100
@@ -154,6 +160,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2020,4,4,20,00),
     endTime : new Date(2020,4,14,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
@@ -164,6 +171,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2019,7,28,12,00),
     endTime : new Date(2019,8,8,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
@@ -174,6 +182,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2017,11,1,12,00),
     endTime : new Date(2017,11,12,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
@@ -184,6 +193,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2020,4,4,20,00),
     endTime : new Date(2020,4,14,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング','最小ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -194,6 +204,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2019,4,8,12,00),
     endTime : new Date(2019,4,19,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング','最小ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -204,6 +215,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2018,8,21,12,00),
     endTime : new Date(2018,8,30,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -214,6 +226,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2017,7,25,12,00),
     endTime : new Date(2017,8,4,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -224,6 +237,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2017,0,19,12,00),
     endTime : new Date(2017,0,31,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -234,6 +248,7 @@ var RACE_CONFIG_MAP = {
     predictionType : PREDICTION_TYPE_LINEAR,
     beginTime : new Date(2019,11,5,12,00),
     endTime : new Date(2019,11,15,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -244,6 +259,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2019,10,21,12,00),
     endTime : new Date(2019,11,1,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -254,6 +270,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2018,10,21,12,00),
     endTime : new Date(2018,11,1,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -264,6 +281,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2018,10,8,12,00),
     endTime : new Date(2018,10,18,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -887,8 +905,11 @@ function displayCharacter(){
     }
   }
 
+  var labels = ['休日20-4','休日4-12','休日12-20','平日20-4','平日4-12','平日12-20'];
 
   var maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * 0.5);
+
+
 
   var ctx = $('#characterStrength');
   if(strengthRadarChart){
@@ -898,7 +919,7 @@ function displayCharacter(){
   strengthRadarChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['休日20-4','休日4-12','休日12-20','平日20-4','平日4-12','平日12-20'],
+      labels: labels,
       datasets : [{
         label : '直近'+RADAR_SAMPLE_NUM+'回',
         data : recentAverage,
@@ -1001,7 +1022,7 @@ function calculate(){
 
   for(var targetTime = new Date(raceConfig.beginTime) ;
     targetTime <= raceConfig.endTime;
-    targetTime.setHours(targetTime.getHours() + 8)){
+    targetTime.setHours(targetTime.getHours() + INTERVAL_HOUR[raceConfig.updateType])){
       allPeriod.push(new Date(targetTime));
       if(targetTime <= currentTime){
         currentPeriod.push(new Date(targetTime));
