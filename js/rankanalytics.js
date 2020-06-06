@@ -4,6 +4,11 @@ var PREDICTION_TYPE_RANGE = 1;
 // 各レース情報定義領域 開始位置
 
 var RACE_TYPE_CONFIG_MAP = {
+  daifugo : {
+    name : '大富豪段位戦',
+    rounds : [
+      {id : 1,name : '第1回'}]
+  },
   slimerace : {
     name : 'スライムレース',
     rounds : [
@@ -123,6 +128,16 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
+  daifugo1 : {
+    title : '第1回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2020,5,2,20,0),
+    endTime : new Date(2020,8,27,20,0),
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   slimerace5 : {
     title : '第5回スライムレース',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -326,9 +341,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "slimerace",
-  round : 5,
-  race : "slimerace5",
+  raceType : "daifugo",
+  round : 1,
+  race : "daifugo1",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
