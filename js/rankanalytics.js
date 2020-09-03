@@ -139,7 +139,7 @@ var RACE_CONFIG_MAP = {
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2020,5,3,0,0),
-    endTime : new Date(2020,8,28,0,0),
+    endTime : new Date(2020,8,17,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -405,7 +405,11 @@ function calculateTimeMappers(snapshotList){
   // データの存在しない時刻を判定するための配列
   var emptyTimes = new Array(currentPeriod.length);
   emptyTimes.fill(true);
-  emptyTimes[0] = false;
+
+  // サンプル数が1以下の時は イベント開始時刻を軸に加える
+  if(snapshotList.length <= 1) {
+    emptyTimes[0] = false;
+  }
 
   // スナップショットのIndexからallPetiodの時刻Indexを逆引きする配列を作成
   timeIndexMapperAll = new Array(snapshotList.length);
