@@ -1,6 +1,12 @@
 var PREDICTION_TYPE_LINEAR = 0;
 var PREDICTION_TYPE_RANGE = 1;
 
+var UPDATE_TYPE_EIGHT_HOURS = 0;
+var UPDATE_TYPE_ONE_DAY = 1;
+var INTERVAL_HOUR = [8, 24];
+
+var RADER_MAX_RATE = 0.6;
+
 // 各レース情報定義領域 開始位置
 
 var RACE_TYPE_CONFIG_MAP = {
@@ -132,8 +138,9 @@ var RACE_CONFIG_MAP = {
     title : '第1回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
-    beginTime : new Date(2020,5,2,20,0),
-    endTime : new Date(2020,8,27,20,0),
+    beginTime : new Date(2020,5,3,0,0),
+    endTime : new Date(2020,8,17,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -144,6 +151,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2020,0,9,12,00),
     endTime : new Date(2020,0,27,4,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_LINEAR,
     rankBorder : 100
@@ -154,6 +162,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2020,4,4,20,00),
     endTime : new Date(2020,4,14,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
@@ -164,6 +173,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2019,7,28,12,00),
     endTime : new Date(2019,8,8,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
@@ -174,6 +184,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
     beginTime : new Date(2017,11,1,12,00),
     endTime : new Date(2017,11,12,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
@@ -184,6 +195,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2020,4,4,20,00),
     endTime : new Date(2020,4,14,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング','最小ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -194,6 +206,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2019,4,8,12,00),
     endTime : new Date(2019,4,19,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング','最小ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -204,6 +217,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2018,8,21,12,00),
     endTime : new Date(2018,8,30,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -214,6 +228,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2017,7,25,12,00),
     endTime : new Date(2017,8,4,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -224,6 +239,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : FISHING_FORMATTER,
     beginTime : new Date(2017,0,19,12,00),
     endTime : new Date(2017,0,31,12,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
@@ -234,6 +250,7 @@ var RACE_CONFIG_MAP = {
     predictionType : PREDICTION_TYPE_LINEAR,
     beginTime : new Date(2019,11,5,12,00),
     endTime : new Date(2019,11,15,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -244,6 +261,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2019,10,21,12,00),
     endTime : new Date(2019,11,1,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -254,6 +272,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2018,10,21,12,00),
     endTime : new Date(2018,11,1,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -264,6 +283,7 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
     beginTime : new Date(2018,10,8,12,00),
     endTime : new Date(2018,10,18,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
@@ -385,7 +405,11 @@ function calculateTimeMappers(snapshotList){
   // データの存在しない時刻を判定するための配列
   var emptyTimes = new Array(currentPeriod.length);
   emptyTimes.fill(true);
-  emptyTimes[0] = false;
+
+  // サンプル数が1以下の時は イベント開始時刻を軸に加える
+  if(snapshotList.length <= 1) {
+    emptyTimes[0] = false;
+  }
 
   // スナップショットのIndexからallPetiodの時刻Indexを逆引きする配列を作成
   timeIndexMapperAll = new Array(snapshotList.length);
@@ -842,53 +866,103 @@ function displayCharacter(){
     },
   });
 
-  // レーダーチャートグラフを生成
-  // 0:休日20-4、1:休日4-12、2:休日12-20、3:平日20-4、4:平日4-12、5:平日12-20
-  var allDiffs = new Array(6);
-  for(var i=0;i<6;i++){
-    allDiffs[i]=[];
-  }
 
-  for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
-    var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
-    if(rankIndex != null && snapshotList[snapshotIndex].diffCount==1){
-      var d = new Date(snapshotList[snapshotIndex].date);
-
-      // 午前4時の場合は前日の日付で休日判定を行う。
-      if(d.getHours() <= 4){
-        d.setDate(d.getDate()-1);
-      }
-
-      // 休日は、祝日もしくは土曜日もしくは日曜日とする
-      // index値を取得
-      var index = (d.getHours() - 4)/8 + ((d.getDay() == 0 || d.getDay() == 6 || isHoliday(d)) ? 0 : 3);
-
-      allDiffs[index].push(snapshotList[snapshotIndex].diffs[selection.characterId]);
+  var allAverage;
+  var recentAverage;
+  var labels;
+  var maxValue;
+  if(raceConfig.updateType == UPDATE_TYPE_ONE_DAY) {
+    // レーダーチャートグラフを生成
+    // 0:日、1:月、2:火、3:水、4:木、5:金、6:土
+    var allDiffs = new Array(7);
+    for(var i=0;i<7;i++){
+      allDiffs[i]=[];
     }
-  }
-  var allAverage = new Array(6);
-  allAverage.fill(0);
-  var recentAverage = new Array(6);
-  recentAverage.fill(0);
-  for(var i=0;i<6;i++){
-    if(allDiffs[i].length > 0){
-      var total = 0;
-      for(var j=0;j<allDiffs[i].length;j++) {
-        total+=allDiffs[i][j];
-      }
-      allAverage[i]=Math.floor(total/allDiffs[i].length);
 
-      total = 0;
-      var recentDiffs = allDiffs[i].slice(Math.max(allDiffs[i].length-RADAR_SAMPLE_NUM,0));
-      for(var j=0;j<recentDiffs.length;j++) {
-        total+=recentDiffs[j];
+    for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+      var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+      if(rankIndex != null && snapshotList[snapshotIndex].diffCount==1){
+        // 前日の曜日で差分を表示する
+        var index = (snapshotList[snapshotIndex].date.getDay() + 6)%7;
+
+        allDiffs[index].push(snapshotList[snapshotIndex].diffs[selection.characterId]);
       }
-      recentAverage[i]=Math.floor(total/recentDiffs.length);
     }
+    allAverage = new Array(7);
+    allAverage.fill(0);
+    recentAverage = new Array(7);
+    recentAverage.fill(0);
+    for(var i=0;i<7;i++){
+      if(allDiffs[i].length > 0){
+        var total = 0;
+        for(var j=0;j<allDiffs[i].length;j++) {
+          total+=allDiffs[i][j];
+        }
+        allAverage[i]=Math.floor(total/allDiffs[i].length);
+
+        total = 0;
+        var recentDiffs = allDiffs[i].slice(Math.max(allDiffs[i].length-RADAR_SAMPLE_NUM,0));
+        for(var j=0;j<recentDiffs.length;j++) {
+          total+=recentDiffs[j];
+        }
+        recentAverage[i]=Math.floor(total/recentDiffs.length);
+      }
+    }
+
+    labels = ['日','月','火','水','木','金','土'];
+
+    maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * RADER_MAX_RATE);
+
+  } else {
+    // レーダーチャートグラフを生成
+    // 0:休日20-4、1:休日4-12、2:休日12-20、3:平日20-4、4:平日4-12、5:平日12-20
+    var allDiffs = new Array(6);
+    for(var i=0;i<6;i++){
+      allDiffs[i]=[];
+    }
+
+    for (var snapshotIndex = 0; snapshotIndex < snapshotList.length; snapshotIndex++) {
+      var rankIndex = snapshotList[snapshotIndex].idMapper[selection.characterId];
+      if(rankIndex != null && snapshotList[snapshotIndex].diffCount==1){
+        var d = new Date(snapshotList[snapshotIndex].date);
+
+        // 午前4時の場合は前日の日付で休日判定を行う。
+        if(d.getHours() <= 4){
+          d.setDate(d.getDate()-1);
+        }
+
+        // 休日は、祝日もしくは土曜日もしくは日曜日とする
+        // index値を取得
+        var index = (d.getHours() - 4)/8 + ((d.getDay() == 0 || d.getDay() == 6 || isHoliday(d)) ? 0 : 3);
+
+        allDiffs[index].push(snapshotList[snapshotIndex].diffs[selection.characterId]);
+      }
+    }
+    allAverage = new Array(6);
+    allAverage.fill(0);
+    recentAverage = new Array(6);
+    recentAverage.fill(0);
+    for(var i=0;i<6;i++){
+      if(allDiffs[i].length > 0){
+        var total = 0;
+        for(var j=0;j<allDiffs[i].length;j++) {
+          total+=allDiffs[i][j];
+        }
+        allAverage[i]=Math.floor(total/allDiffs[i].length);
+
+        total = 0;
+        var recentDiffs = allDiffs[i].slice(Math.max(allDiffs[i].length-RADAR_SAMPLE_NUM,0));
+        for(var j=0;j<recentDiffs.length;j++) {
+          total+=recentDiffs[j];
+        }
+        recentAverage[i]=Math.floor(total/recentDiffs.length);
+      }
+    }
+
+    labels = ['休日20-4','休日4-12','休日12-20','平日20-4','平日4-12','平日12-20'];
+
+    maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * RADER_MAX_RATE);
   }
-
-
-  var maxValue = Math.floor(data.subraceList[selection.subrace].maxDiff * 0.5);
 
   var ctx = $('#characterStrength');
   if(strengthRadarChart){
@@ -898,7 +972,7 @@ function displayCharacter(){
   strengthRadarChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['休日20-4','休日4-12','休日12-20','平日20-4','平日4-12','平日12-20'],
+      labels: labels,
       datasets : [{
         label : '直近'+RADAR_SAMPLE_NUM+'回',
         data : recentAverage,
@@ -1001,7 +1075,7 @@ function calculate(){
 
   for(var targetTime = new Date(raceConfig.beginTime) ;
     targetTime <= raceConfig.endTime;
-    targetTime.setHours(targetTime.getHours() + 8)){
+    targetTime.setHours(targetTime.getHours() + INTERVAL_HOUR[raceConfig.updateType])){
       allPeriod.push(new Date(targetTime));
       if(targetTime <= currentTime){
         currentPeriod.push(new Date(targetTime));
@@ -1058,7 +1132,7 @@ function calculate(){
       if(j>0) {
         // 8時間刻みで前回のスナップショットから何回になるか計算。
         // 基本1となることを期待
-        var diffCount = (snapshotList[j].date.getTime() - snapshotList[j-1].date.getTime())/1000/60/60/8;
+        var diffCount = (snapshotList[j].date.getTime() - snapshotList[j-1].date.getTime())/1000/60/60/INTERVAL_HOUR[raceConfig.updateType];
         snapshotList[j]['diffCount'] = diffCount;
 
         for(var characterIndex = 0;characterIndex < characterLength;characterIndex++) {
