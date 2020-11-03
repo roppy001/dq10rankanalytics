@@ -31,11 +31,11 @@ var RACE_TYPE_CONFIG_MAP = {
   fishing : {
     name : 'フィッシングコンテスト',
     rounds : [
+      {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
-      {id : 1,name : '第1回'},
-      {id : 5,name : 'デモ用'}]
+      {id : 1,name : '第1回'}]
   },
   pencil : {
     name : 'バトエン大会',
@@ -137,7 +137,7 @@ var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 var RACE_CONFIG_MAP = {
   daifugo2 : {
     title : '第2回大富豪段位戦ランキング',
-    predictionType : PREDICTION_TYPE_RANGE,
+    predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2020,8,16,0,0),
     endTime : new Date(2020,11,23,0,0),
@@ -202,11 +202,11 @@ var RACE_CONFIG_MAP = {
     rankBorder : 100
   },
   fishing5 : {
-    title : 'デモ用データ(期間2倍化)',
+    title : '第5回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : FISHING_FORMATTER,
-    beginTime : new Date(2020,4,4,20,00),
-    endTime : new Date(2020,4,14,20,00),
+    beginTime : new Date(2020,10,4,12,00),
+    endTime : new Date(2020,10,15,4,00),
     updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['最大ランキング','最小ランキング'],
     borders : RACE_10_100_200_RANGE,
@@ -373,9 +373,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 2,
-  race : "daifugo2",
+  raceType : "fishing",
+  round : 5,
+  race : "fishing5",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
