@@ -611,25 +611,18 @@ function displayDashboard(){
 
       var currentTimeIndex = timeIndexMapperAll[snapshotList.length - 1];
       if(currentTimeIndex > 0){
-        for(var timeIndex = 0;timeIndex < allPeriod.length;timeIndex++) {
-          if(timeIndex<=currentTimeIndex){
-            // 過去は実績値を表示
-            predictedBorderColumns[i][timeIndex+1] = actualBorderColumns[i][timeIndex+1];
-          } else{
-            // 未来は予測値を表示
-            
-            // 順位に 経過期間/計算対象時刻 を掛けて、最終日値が現在の何位に相当するかを小数ありで求める
-            var predictedRankIndex = Math.max((raceConfig.borders[i].rankIndex + 1) * currentTimeIndex / timeIndex -1,0);
+        for(var timeIndex = currentTimeIndex;timeIndex < allPeriod.length;timeIndex++) {
+          // 順位に 経過期間/計算対象時刻 を掛けて、最終日値が現在の何位に相当するかを小数ありで求める
+          var predictedRankIndex = Math.max((raceConfig.borders[i].rankIndex + 1) * currentTimeIndex / timeIndex -1,0);
 
-            // 小数部分は線形補完する
+          // 小数部分は線形補完する
 
-            var lowerRankIndex = Math.floor(predictedRankIndex);
-            var lowerDiff = predictedRankIndex - lowerRankIndex;
-            var upperRankIndex = Math.min(lowerRankIndex + 1,raceConfig.rankBorder-1);
-            var upperDiff = 1 - lowerDiff;
+          var lowerRankIndex = Math.floor(predictedRankIndex);
+          var lowerDiff = predictedRankIndex - lowerRankIndex;
+          var upperRankIndex = Math.min(lowerRankIndex + 1,raceConfig.rankBorder-1);
+          var upperDiff = 1 - lowerDiff;
 
-            predictedBorderColumns[i][timeIndex+1] = snapshot.rankList[snapshot.rankMapper[lowerRankIndex]].point * upperDiff + snapshot.rankList[snapshot.rankMapper[upperRankIndex]].point * lowerDiff;
-          }
+          predictedBorderColumns[i][timeIndex+1] = snapshot.rankList[snapshot.rankMapper[lowerRankIndex]].point * upperDiff + snapshot.rankList[snapshot.rankMapper[upperRankIndex]].point * lowerDiff;
         }
         $('#border' + i + ' .prediction').text(raceConfig.numberFormatter(predictedBorderColumns[i][allPeriod.length]));
       } else {
