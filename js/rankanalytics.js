@@ -401,9 +401,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugom",
-  round : 1,
-  race : "daifugom1",
+  raceType : "daifugo",
+  round : 3,
+  race : "daifugo3",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
@@ -1074,7 +1074,7 @@ function resetSubraceSelection(){
   var parentDom = $('#subraceSelection');
   parentDom.children('.ra-dynamic').remove();
 
-　for(var i=0;i<raceConfig.subraceNames.length;i++) {
+  for(var i=0;i<raceConfig.subraceNames.length;i++) {
     var newDom = subraceSelectionTemplate.clone();
     newDom.children().text(raceConfig.subraceNames[i]);
     if(selection.subrace == i){
@@ -1268,7 +1268,7 @@ function setRound() {
   var parentDom = $('#roundSelection');
   parentDom.children('.ra-dynamic').remove();
 
-　for(var i=0;i<rounds.length;i++) {
+  for(var i=0;i<rounds.length;i++) {
     var newDom = roundSelectionTemplate.clone();
     newDom.children().text(rounds[i].name);
 
@@ -1321,7 +1321,7 @@ function initHeader(){
   var parentDom = $('#raceTypeSelection');
   parentDom.children('.ra-dynamic').remove();
 
-　for(var key in RACE_TYPE_CONFIG_MAP) {
+  for(var key in RACE_TYPE_CONFIG_MAP) {
     var newDom = raceTypeSelectionTemplate.clone();
     newDom.children().text(RACE_TYPE_CONFIG_MAP[key].name);
     newDom.on('click', {key : key} , function(e){
