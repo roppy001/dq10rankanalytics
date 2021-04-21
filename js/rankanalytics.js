@@ -31,9 +31,9 @@ var RACE_TYPE_CONFIG_MAP = {
   casinoraid : {
     name : 'カジノレイド',
     rounds : [
+      {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
-      {id : 1,name : '第1回'},
-      {id : 3,name : 'デモ用'}]
+      {id : 1,name : '第1回'}]
   },
   fishing : {
     name : 'フィッシングコンテスト',
@@ -209,13 +209,13 @@ var RACE_CONFIG_MAP = {
     rankBorder : 100
   },
   casinoraid3 : {
-    title : 'デモ用データ(期間2倍化)',
+    title : '第3回カジノレイド',
     predictionType : PREDICTION_TYPE_RANGE,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
-    beginTime : new Date(2020,4,4,20,00),
-    endTime : new Date(2020,4,14,20,00),
+    beginTime : new Date(2021,3,21,12,00),
+    endTime : new Date(2021,4,3,4,00),
     updateType : UPDATE_TYPE_EIGHT_HOURS,
-    subraceNames : ['ポーカー','スロット','ルーレット'],
+    subraceNames : ['ポーカー','スロット','ルーレット','ビンゴ'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
@@ -382,15 +382,36 @@ var HOLIDAYS = [
   new Date('2021/5/3'),
   new Date('2021/5/4'),
   new Date('2021/5/5'),
-  new Date('2021/7/19'),
-  new Date('2021/8/11'),
+  new Date('2021/7/22'),
+  new Date('2021/7/23'),
+  new Date('2021/8/8'),
+  new Date('2021/8/9'),
   new Date('2021/9/20'),
   new Date('2021/9/23'),
-  new Date('2021/10/11'),
   new Date('2021/11/3'),
   new Date('2021/11/23'),
   new Date('2021/12/30'),
   new Date('2021/12/31'),
+  new Date('2022/1/1'),
+  new Date('2022/1/2'),
+  new Date('2022/1/3'),
+  new Date('2022/1/10'),
+  new Date('2022/2/11'),
+  new Date('2022/2/23'),
+  new Date('2022/3/21'),
+  new Date('2022/4/29'),
+  new Date('2022/5/3'),
+  new Date('2022/5/4'),
+  new Date('2022/5/5'),
+  new Date('2022/7/18'),
+  new Date('2022/8/11'),
+  new Date('2022/9/19'),
+  new Date('2022/9/23'),
+  new Date('2022/10/10'),
+  new Date('2022/11/3'),
+  new Date('2022/11/23'),
+  new Date('2022/12/30'),
+  new Date('2022/12/31'),
     ];
 
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
@@ -413,9 +434,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 4,
-  race : "daifugo4",
+  raceType : "casinoraid",
+  round : 3,
+  race : "casinoraid3",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
