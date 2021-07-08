@@ -18,6 +18,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
@@ -153,12 +154,23 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo5 : {
+    title : '第5回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2021,6,8,0,0),
+    endTime : new Date(2021,11,11,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo4 : {
     title : '第4回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
-    beginTime : new Date(2021,3,1,0,0),
-    endTime : new Date(2021,6,14,0,0),
+    beginTime : new Date(2021,2,31,0,0),
+    endTime : new Date(2021,6,9,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -435,8 +447,8 @@ var data;
 var initialSelection = {
   screen : 0,
   raceType : "daifugo",
-  round : 4,
-  race : "daifugo4",
+  round : 5,
+  race : "daifugo5",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
