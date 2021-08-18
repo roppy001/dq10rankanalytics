@@ -13,6 +13,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugom : {
     name : '大富豪決定戦',
     rounds : [
+      {id : 2,name : '第2回'},
       {id : 1,name : '第1回'}]
   },
   daifugo : {
@@ -149,6 +150,17 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2021,0,6,0,0),
     endTime : new Date(2021,0,24,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugom2 : {
+    title : '第2回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2021,7,18,0,0),
+    endTime : new Date(2021,7,30,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -446,9 +458,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 5,
-  race : "daifugo5",
+  raceType : "daifugom",
+  round : 2,
+  race : "daifugom2",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
