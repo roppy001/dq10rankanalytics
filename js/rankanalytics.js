@@ -144,23 +144,23 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
+  daifugom2 : {
+    title : '第2回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2021,7,18,12,0),
+    endTime : new Date(2021,7,30,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugom1 : {
     title : '第1回大富豪決定戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2021,0,6,0,0),
     endTime : new Date(2021,0,24,0,0),
-    updateType : UPDATE_TYPE_ONE_DAY,
-    subraceNames : ['ランキング'],
-    borders : RACE_10_100_1000_LINEAR,
-    rankBorder : 1000
-  },
-  daifugom2 : {
-    title : '第2回大富豪決定戦ランキング',
-    predictionType : PREDICTION_TYPE_LINEAR,
-    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
-    beginTime : new Date(2021,7,18,0,0),
-    endTime : new Date(2021,7,30,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
