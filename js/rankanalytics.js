@@ -452,6 +452,9 @@ var DISPLAY_HISTORY_NUM = 4;
 // レーダーの直近サンプリング数
 var RADAR_SAMPLE_NUM = 3;
 
+// 差分ランキングの表示限界
+var DISPLAY_DIFF_RANK_MAX = 100;
+
 // レースデータ保持領域
 var data;
 
@@ -464,7 +467,8 @@ var initialSelection = {
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
-  characterId : 0
+  characterId : 0,
+  diffRankIndex : 0
 };
 
 var selection = Object.create(initialSelection);
@@ -481,6 +485,7 @@ var subraceSelectionTemplate;
 var raceTypeSelectionTemplate;
 var roundSelectionTemplate;
 var characterTableTemplate;
+var diffRankTableTemplate;
 
 var strengthRadarChart;
 
@@ -1103,11 +1108,79 @@ function displayCharacter(){
 
 }
 
+function displayDiffRank(){
+  $('#diffRank').removeClass('ra-hidden');
+  $('#selectDiffRank').addClass('active');
+
+  var raceConfig = RACE_CONFIG_MAP[selection.race];
+
+  var snapshotList = data.subraceList[selection.subrace].snapshotList;
+
+  var displayNameList = data.subraceList[selection.subrace].displayNameList
+
+  var characterLength = displayNameList.length
+  var diffRankTable = new Array(characterLength);
+  diffRankTable.fill(null);
+
+  // 各キャラクターの差分値とIDを記録
+  for(var i=0;i<diffRankTable.length;i++) {
+    diffRankTable[i] = {};
+    diffRankTable[i]['diff'] = snapshotList[selection.diffRankIndex].diffs[i];
+    diffRankTable[i]['characterId'] = i;
+  }
+
+  // 差分値降順でソート
+  diffRankTable.sort(function(a, b){
+    if (a.diff === null && b.diff === null) {
+      return 0;
+    } else if (a.diff === null){
+      return 1;
+    } else if (b.diff === null){
+      return -1;
+    } else {
+      return b.diff - a.diff;
+    }
+  });
+
+
+  // キャラクターデータを表示
+  var parentDom = $('#diffRankTable');
+  parentDom.find('.ra-dynamic').remove();
+  
+  $('#displayDiffRankString').text(timeStringFormatter(snapshotList[selection.diffRankIndex].date) + 'のランキング');
+
+  for(var i=0;i<diffRankTable.length && i<DISPLAY_DIFF_RANK_MAX;i++) {
+    var newDom = diffRankTableTemplate.clone();
+    newDom.children('.rank').text((i+1)+'位');
+    newDom.children('.name').text(displayNameList[diffRankTable[i].characterId].name);
+    
+    if(diffRankTable[i].diff === null) {
+      newDom.children('.point').text('データなし');
+    } else {
+      newDom.children('.point').text(diffRankTable[i].diff);
+    }
+
+    newDom.on('click', {characterId : diffRankTable[i].characterId} , function(e){
+      selection.characterId = e.data.characterId;
+      selection.screen = 1;
+
+      display();
+    });
+
+    parentDom.append(newDom);
+  }
+
+
+
+}
+
 function display(){
   $('#dashboard').addClass('ra-hidden');
   $('#selectDashboard').removeClass('active');
   $('#character').addClass('ra-hidden');
   $('#selectCharacter').removeClass('active');
+  $('#diffRank').addClass('ra-hidden');
+  $('#selectDiffRank').removeClass('active');
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
   $('#raceTitle').text(raceConfig.title);
@@ -1122,7 +1195,10 @@ function display(){
     case 1:
       displayCharacter();
       break;
-    }
+    case 2:
+      displayDiffRank();
+      break;
+  }
 }
 
 function resetSubraceSelection(){
@@ -1301,6 +1377,21 @@ function initEventHandler(){
     selection.characterId=data.subraceList[selection.subrace].characterIds[characterIndex];
     display();
   });
+
+  $('#diffRankIndexLeft').on('click',function(){
+    if (selection.diffRankIndex < data.subraceList[selection.subrace].snapshotList.length - 1) {
+      selection.diffRankIndex++;
+    }
+    display();
+  });
+
+  $('#diffRankIndexRight').on('click',function(){
+    if (selection.diffRankIndex > 0) {
+      selection.diffRankIndex--;
+    }
+    display();
+  });
+
 }
 
 function reloadRaceData(){
@@ -1371,6 +1462,12 @@ function initSelectionTemplate() {
   characterTableTemplate.addClass('ra-dynamic');
   tempDom.remove();
 
+  tempDom = $('#diffRankTable .ra-template');
+  diffRankTableTemplate = tempDom.clone();
+  diffRankTableTemplate.removeClass('ra-template');
+  diffRankTableTemplate.addClass('ra-dynamic');
+  tempDom.remove();
+
 }
 
 function initHeader(){
@@ -1418,6 +1515,14 @@ function initHeader(){
     var rankListIndex = snapshot.rankMapper[selection.targetRank-1];
     selection.characterId = snapshot.rankList[rankListIndex].id;
     display();
+  });
+
+  $('#selectDiffRank').on('click',function(){
+    if(RACE_CONFIG_MAP[selection.race].predictionType == PREDICTION_TYPE_LINEAR){
+      selection.screen = 2;
+      selection.diffRankIndex = data.subraceList[selection.subrace].snapshotList.length - 1;
+      display();
+    }
   });
 
 }
