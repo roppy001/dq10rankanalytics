@@ -25,7 +25,7 @@
   <script type='text/javascript' src='js/c3.min.js'></script>
   <script type='text/javascript' src='js/Chart.min.js'></script>
   <script type='text/javascript' src='js/bootstrap3.min.js'></script>
-  <script type='text/javascript' src='js/rankanalytics.js?202107090100'></script>
+  <script type='text/javascript' src='js/rankanalytics.js?202108220300'></script>
 
 
 </head>
@@ -46,6 +46,7 @@
         <ul class="nav navbar-nav">
           <li id="selectDashboard" class="active"><a href="#">概要</a></li>
           <li id="selectCharacter" ><a href="#">キャラ別</a></li>
+          <li id="selectDiffRank" ><a href="#">差分ランク</a></li>
           <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
               aria-expanded="false">
               レース <span class="caret"></span>
@@ -175,6 +176,34 @@
       <div class="col-xs-12 col-sm-6">
         <div id="characterRankTitle"class="text-center"></div>
         <div id="characterRank"></div>
+      </div>
+    </div>
+  </div>
+  <!-- 差分ランク画面  -->
+  <div id="diffRank" class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 text-left" id="displayDiffRankString">
+      </div>
+      <div class="col-xs-12 col-sm-6 text-right">
+        <button type="button" class="btn btn-default glyphicon glyphicon-chevron-left" id="diffRankIndexLeft"></button>
+        <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right" id="diffRankIndexRight"></button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div id="diffRankTableTitle" class="text-center"></div>
+        <table id="diffRankTable" class="table">
+          <tr>
+            <th>順位</th>
+            <th>名前</th>
+            <th>スコア差分</th>
+          </tr>
+          <tr class="ra-ct-normal ra-template">
+            <td class="rank"></td>
+            <td class="name"></td>
+            <td class="point"></td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
