@@ -1147,7 +1147,7 @@ function displayDiffRank(){
   var parentDom = $('#diffRankTable');
   parentDom.find('.ra-dynamic').remove();
   
-  $('#displayDiffRankString').text(timeStringFormatter(snapshotList[selection.diffRankIndex].date) + 'のランキング');
+  $('#displayDiffRankString').text(timeStringFormatter(snapshotList[selection.diffRankIndex].date) + 'の差分ランキング');
 
   for(var i=0;i<diffRankTable.length && i<DISPLAY_DIFF_RANK_MAX;i++) {
     var newDom = diffRankTableTemplate.clone();
