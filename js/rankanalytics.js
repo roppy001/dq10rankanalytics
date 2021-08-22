@@ -1157,7 +1157,7 @@ function displayDiffRank(){
     if(diffRankTable[i].diff === null) {
       newDom.children('.point').text('データなし');
     } else {
-      newDom.children('.point').text(diffRankTable[i].diff);
+      newDom.children('.point').text(raceConfig.numberFormatter(diffRankTable[i].diff));
     }
 
     newDom.on('click', {characterId : diffRankTable[i].characterId} , function(e){
