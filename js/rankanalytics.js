@@ -221,6 +221,17 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  slimerace6 : {
+    title : '第6回スライムレース',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2021,8,1,12,00),
+    endTime : new Date(2021,8,13,4,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_LINEAR,
+    rankBorder : 100
+  },
   slimerace5 : {
     title : '第5回スライムレース',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -461,9 +472,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugom",
-  round : 2,
-  race : "daifugom2",
+  raceType : "slimerace",
+  round : 6,
+  race : "slimerace6",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
