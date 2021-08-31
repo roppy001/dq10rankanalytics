@@ -28,6 +28,7 @@ var RACE_TYPE_CONFIG_MAP = {
   slimerace : {
     name : 'スライムレース',
     rounds : [
+      {id : 6,name : '第6回'},
       {id : 5,name : '第5回'}]
   },
   casinoraid : {
