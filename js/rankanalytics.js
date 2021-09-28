@@ -41,6 +41,7 @@ var RACE_TYPE_CONFIG_MAP = {
   fishing : {
     name : 'フィッシングコンテスト',
     rounds : [
+      {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
@@ -277,6 +278,17 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
+  fishing6 : {
+    title : '第6回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2021,8,29,12,00),
+    endTime : new Date(2021,9,11,4,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['最大ランキング','最小ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
+  },
   fishing5 : {
     title : '第5回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
@@ -473,9 +485,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "slimerace",
+  raceType : "fishing",
   round : 6,
-  race : "slimerace6",
+  race : "fishing6",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
