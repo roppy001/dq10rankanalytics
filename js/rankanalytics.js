@@ -485,9 +485,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "fishing",
-  round : 6,
-  race : "fishing6",
+  raceType : "daifugo",
+  round : 5,
+  race : "daifugo5",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
