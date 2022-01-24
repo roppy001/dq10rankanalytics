@@ -19,6 +19,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
@@ -51,6 +52,7 @@ var RACE_TYPE_CONFIG_MAP = {
   pencil : {
     name : 'バトエン大会',
     rounds : [
+      {id : 6,name : '第3回タクティカル'},
       {id : 5,name : '第2回マイデッキ'},
       {id : 4,name : '第2回タクティカル'},
       {id : 3,name : '第1回マイデッキ'},
@@ -168,12 +170,23 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo6 : {
+    title : '第6回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2021,10,12,0,0),
+    endTime : new Date(2022,2,17,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo5 : {
     title : '第5回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2021,6,8,0,0),
-    endTime : new Date(2021,11,11,0,0),
+    endTime : new Date(2021,10,11,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -344,6 +357,17 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
+  pencil6 : {
+    title : '第3回タクティカルピックルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2022,0,13,12,00),
+    endTime : new Date(2022,0,23,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   pencil5 : {
     title : '第2回マイデッキルール',
     numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
@@ -485,9 +509,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 5,
-  race : "daifugo5",
+  raceType : "pencil",
+  round : 6,
+  race : "pencil6",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
