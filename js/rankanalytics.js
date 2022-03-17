@@ -19,6 +19,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
@@ -166,6 +167,17 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2021,0,6,0,0),
     endTime : new Date(2021,0,24,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugo7 : {
+    title : '第7回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2022,2,17,0,0),
+    endTime : new Date(2022,6,7,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -496,6 +508,26 @@ var HOLIDAYS = [
   new Date('2022/11/23'),
   new Date('2022/12/30'),
   new Date('2022/12/31'),
+  new Date('2023/1/1'),
+  new Date('2023/1/2'),
+  new Date('2023/1/3'),
+  new Date('2023/1/9'),
+  new Date('2023/2/11'),
+  new Date('2023/2/23'),
+  new Date('2023/3/21'),
+  new Date('2023/4/29'),
+  new Date('2023/5/3'),
+  new Date('2023/5/4'),
+  new Date('2023/5/5'),
+  new Date('2023/7/17'),
+  new Date('2023/8/11'),
+  new Date('2023/9/18'),
+  new Date('2023/9/23'),
+  new Date('2023/10/9'),
+  new Date('2023/11/3'),
+  new Date('2023/11/23'),
+  new Date('2023/12/30'),
+  new Date('2023/12/31'),
     ];
 
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
@@ -522,8 +554,8 @@ var data;
 var initialSelection = {
   screen : 0,
   raceType : "daifugo",
-  round : 6,
-  race : "daifugo6",
+  round : 7,
+  race : "daifugo7",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
