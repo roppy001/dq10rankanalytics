@@ -38,6 +38,7 @@ var RACE_TYPE_CONFIG_MAP = {
   casinoraid : {
     name : 'カジノレイド',
     rounds : [
+      {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
       {id : 1,name : '第1回'}]
@@ -293,6 +294,17 @@ var RACE_CONFIG_MAP = {
     updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_LINEAR,
+    rankBorder : 100
+  },
+  casinoraid4 : {
+    title : '第4回カジノレイド',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
+    beginTime : new Date(2022,8,21,12,00),
+    endTime : new Date(2022,9,3,4,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ポーカー','スロット','ルーレット','ビンゴ'],
+    borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
   casinoraid3 : {
@@ -577,9 +589,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 8,
-  race : "daifugo8",
+  raceType : "casinoraid",
+  round : 4,
+  race : "casinoraid4",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
