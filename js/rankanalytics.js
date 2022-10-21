@@ -20,6 +20,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 9,name : '第9回'},
       {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
@@ -181,6 +182,17 @@ var RACE_CONFIG_MAP = {
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2021,0,6,0,0),
     endTime : new Date(2021,0,24,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugo9 : {
+    title : '第9回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2022,9,19,0,0),
+    endTime : new Date(2023,0,26,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -589,9 +601,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "casinoraid",
-  round : 4,
-  race : "casinoraid4",
+  raceType : "daifugo",
+  round : 9,
+  race : "daifugo9",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
