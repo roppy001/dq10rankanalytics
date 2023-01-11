@@ -13,12 +13,18 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugom : {
     name : '大富豪決定戦',
     rounds : [
+      {id : 4,name : '第4回'},
+      {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
       {id : 1,name : '第1回'}]
   },
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 9,name : '第9回'},
+      {id : 8,name : '第8回'},
+      {id : 7,name : '第7回'},
+      {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
@@ -34,6 +40,7 @@ var RACE_TYPE_CONFIG_MAP = {
   casinoraid : {
     name : 'カジノレイド',
     rounds : [
+      {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
       {id : 1,name : '第1回'}]
@@ -51,6 +58,8 @@ var RACE_TYPE_CONFIG_MAP = {
   pencil : {
     name : 'バトエン大会',
     rounds : [
+      {id : 7,name : '第3回マイデッキ'},
+      {id : 6,name : '第3回タクティカル'},
       {id : 5,name : '第2回マイデッキ'},
       {id : 4,name : '第2回タクティカル'},
       {id : 3,name : '第1回マイデッキ'},
@@ -146,6 +155,28 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
+  daifugom4 : {
+    title : '第4回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2023,0,4,12,0),
+    endTime : new Date(2023,0,16,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugom3 : {
+    title : '第3回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2022,4,25,12,0),
+    endTime : new Date(2022,5,6,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugom2 : {
     title : '第2回大富豪決定戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -168,12 +199,56 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo9 : {
+    title : '第9回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2022,9,19,0,0),
+    endTime : new Date(2023,0,26,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugo8 : {
+    title : '第8回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2022,6,6,0,0),
+    endTime : new Date(2022,9,20,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugo7 : {
+    title : '第7回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2022,2,17,0,0),
+    endTime : new Date(2022,6,7,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugo6 : {
+    title : '第6回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2021,10,12,0,0),
+    endTime : new Date(2022,2,17,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo5 : {
     title : '第5回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2021,6,8,0,0),
-    endTime : new Date(2021,11,11,0,0),
+    endTime : new Date(2021,10,11,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -243,6 +318,17 @@ var RACE_CONFIG_MAP = {
     updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_LINEAR,
+    rankBorder : 100
+  },
+  casinoraid4 : {
+    title : '第4回カジノレイド',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
+    beginTime : new Date(2022,8,21,12,00),
+    endTime : new Date(2022,9,3,4,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ポーカー','スロット','ルーレット','ビンゴ'],
+    borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
   casinoraid3 : {
@@ -343,6 +429,28 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['最大ランキング'],
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
+  },
+  pencil7 : {
+    title : '第3回マイデッキルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2022,0,27,12,00),
+    endTime : new Date(2022,1,6,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  pencil6 : {
+    title : '第3回タクティカルピックルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2022,0,13,12,00),
+    endTime : new Date(2022,0,23,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
   },
   pencil5 : {
     title : '第2回マイデッキルール',
@@ -460,6 +568,26 @@ var HOLIDAYS = [
   new Date('2022/11/23'),
   new Date('2022/12/30'),
   new Date('2022/12/31'),
+  new Date('2023/1/1'),
+  new Date('2023/1/2'),
+  new Date('2023/1/3'),
+  new Date('2023/1/9'),
+  new Date('2023/2/11'),
+  new Date('2023/2/23'),
+  new Date('2023/3/21'),
+  new Date('2023/4/29'),
+  new Date('2023/5/3'),
+  new Date('2023/5/4'),
+  new Date('2023/5/5'),
+  new Date('2023/7/17'),
+  new Date('2023/8/11'),
+  new Date('2023/9/18'),
+  new Date('2023/9/23'),
+  new Date('2023/10/9'),
+  new Date('2023/11/3'),
+  new Date('2023/11/23'),
+  new Date('2023/12/30'),
+  new Date('2023/12/31'),
     ];
 
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
@@ -485,9 +613,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 5,
-  race : "daifugo5",
+  raceType : "daifugom",
+  round : 4,
+  race : "daifugom4",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
