@@ -21,6 +21,8 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 11,name : '第11回'},
+      {id : 10,name : '第10回'},
       {id : 9,name : '第9回'},
       {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
@@ -199,12 +201,34 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo11 : {
+    title : '第11回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2023,5,14,0,0),
+    endTime : new Date(2023,9,11,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugo10 : {
+    title : '第10回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2023,1,1,0,0),
+    endTime : new Date(2023,5,15,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo9 : {
     title : '第9回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2022,9,19,0,0),
-    endTime : new Date(2023,0,26,0,0),
+    endTime : new Date(2023,1,2,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -588,7 +612,32 @@ var HOLIDAYS = [
   new Date('2023/11/23'),
   new Date('2023/12/30'),
   new Date('2023/12/31'),
-    ];
+  new Date('2024/1/1'),
+  new Date('2024/1/2'),
+  new Date('2024/1/3'),
+  new Date('2024/1/8'),
+  new Date('2024/2/11'),
+  new Date('2024/2/12'),
+  new Date('2024/2/23'),
+  new Date('2024/3/20'),
+  new Date('2024/4/29'),
+  new Date('2024/5/3'),
+  new Date('2024/5/4'),
+  new Date('2024/5/5'),
+  new Date('2024/5/6'),
+  new Date('2024/7/15'),
+  new Date('2024/8/11'),
+  new Date('2024/8/12'),
+  new Date('2024/9/16'),
+  new Date('2024/9/22'),
+  new Date('2024/9/23'),
+  new Date('2024/10/14'),
+  new Date('2024/11/3'),
+  new Date('2024/11/4'),
+  new Date('2024/11/23'),
+  new Date('2024/12/30'),
+  new Date('2024/12/31'),
+  ];
 
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
 // この値分下位のキャラのデータを表示するようにする。
@@ -613,9 +662,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugom",
-  round : 4,
-  race : "daifugom4",
+  raceType : "daifugo",
+  round : 11,
+  race : "daifugo11",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
