@@ -50,6 +50,7 @@ var RACE_TYPE_CONFIG_MAP = {
   fishing : {
     name : 'フィッシングコンテスト',
     rounds : [
+      {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
@@ -387,6 +388,17 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
+  },
+  fishing7 : {
+    title : '第7回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2023,6,27,12,00),
+    endTime : new Date(2023,7,14,4,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['最大ランキング','最小ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
   },
   fishing6 : {
     title : '第6回フィッシングコンテスト',
