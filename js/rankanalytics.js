@@ -13,6 +13,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugom : {
     name : '大富豪決定戦',
     rounds : [
+      {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
       {id : 2,name : '第2回'},
@@ -158,6 +159,17 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
+  daifugom5 : {
+    title : '第5回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2023,7,30,12,0),
+    endTime : new Date(2023,8,11,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugom4 : {
     title : '第4回大富豪決定戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -202,12 +214,23 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo12 : {
+    title : '第12回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2023,9,5,0,0),
+    endTime : new Date(2024,2,21,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo11 : {
     title : '第11回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2023,5,14,0,0),
-    endTime : new Date(2023,9,11,0,0),
+    endTime : new Date(2023,9,6,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
