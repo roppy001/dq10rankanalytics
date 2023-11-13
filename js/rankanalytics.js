@@ -22,6 +22,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 12,name : '第12回'},
       {id : 11,name : '第11回'},
       {id : 10,name : '第10回'},
       {id : 9,name : '第9回'},
@@ -62,6 +63,8 @@ var RACE_TYPE_CONFIG_MAP = {
   pencil : {
     name : 'バトエン大会',
     rounds : [
+      {id : 9,name : '第4回マイデッキ'},
+      {id : 8,name : '第4回タクティカル'},
       {id : 7,name : '第3回マイデッキ'},
       {id : 6,name : '第3回タクティカル'},
       {id : 5,name : '第2回マイデッキ'},
@@ -489,6 +492,28 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_200_RANGE,
     rankBorder : 200
   },
+  pencil9 : {
+    title : '第4回マイデッキピックルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2023,10,8,12,00),
+    endTime : new Date(2023,10,19,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  pencil8 : {
+    title : '第4回タクティカルピックルール',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('点'),
+    beginTime : new Date(2023,9,25,12,00),
+    endTime : new Date(2023,10,5,20,00),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   pencil7 : {
     title : '第3回マイデッキルール',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -697,9 +722,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 11,
-  race : "daifugo11",
+  raceType : "pencil",
+  round : 9,
+  race : "pencil9",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
