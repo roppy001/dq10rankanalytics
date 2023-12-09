@@ -884,6 +884,14 @@ function displayDashboard(){
 
   calculateTimeMappers(snapshotList);
 
+  // 前回のスナップショットで登場したIDを記録
+  previousIdSet = {};
+  if (snapshotList.length > 1 ) {
+    for (var i=0;i< snapshotList[snapshotList.length - 2].rankList.length;i++) {
+      previousIdSet[snapshotList[snapshotList.length - 2].rankList[i].id] = true;
+    }
+  }
+
   nameIdMapper = {};
 
   for (var i = 0,nameMap = {}; i < rankLength; i++) {
@@ -903,6 +911,11 @@ function displayDashboard(){
       name = name + nameMap[name];
     } else {
       nameMap[name] = 1;
+    }
+
+    //前日にいなかった人にはしるしをつける
+    if(!(id in previousIdSet)) {
+      name = name + '*';
     }
 
     nameIdMapper[name] = id;
