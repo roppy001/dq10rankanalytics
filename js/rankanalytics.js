@@ -732,7 +732,7 @@ var DISPLAY_RANK_UPPER_INTERVAL = 10;
 var DISPLAY_RANK_LOWER_INTERVAL = 10;
 
 // キャラ個別画面で表示される履歴の最大数
-var DISPLAY_HISTORY_NUM = 4;
+var DISPLAY_HISTORY_NUM = 5;
 
 // レーダーの直近サンプリング数
 var RADAR_SAMPLE_NUM = 3;
