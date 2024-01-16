@@ -38,6 +38,7 @@ var RACE_TYPE_CONFIG_MAP = {
   slimerace : {
     name : 'スライムレース',
     rounds : [
+      {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
       {id : 5,name : '第5回'}]
   },
@@ -349,6 +350,17 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
+  },
+  slimerace7 : {
+    title : '第7回スライムレース',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2024,0,10,12,0),
+    endTime : new Date(2024,0,22,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_LINEAR,
+    rankBorder : 100
   },
   slimerace6 : {
     title : '第6回スライムレース',
@@ -734,9 +746,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "casinoraid",
-  round : 5,
-  race : "casinoraid5",
+  raceType : "slimerace",
+  round : 7,
+  race : "slimerace7",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
