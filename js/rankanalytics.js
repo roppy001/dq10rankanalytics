@@ -224,7 +224,7 @@ var RACE_CONFIG_MAP = {
     title : '第13回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
-    beginTime : new Date(2023,2,21,0,0),
+    beginTime : new Date(2024,2,21,0,0),
     endTime : new Date(2024,6,11,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
