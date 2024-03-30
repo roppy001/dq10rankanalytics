@@ -22,6 +22,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 13,name : '第13回'},
       {id : 12,name : '第12回'},
       {id : 11,name : '第11回'},
       {id : 10,name : '第10回'},
@@ -38,6 +39,7 @@ var RACE_TYPE_CONFIG_MAP = {
   slimerace : {
     name : 'スライムレース',
     rounds : [
+      {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
       {id : 5,name : '第5回'}]
   },
@@ -218,6 +220,17 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo13 : {
+    title : '第13回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2024,2,21,0,0),
+    endTime : new Date(2024,6,11,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo12 : {
     title : '第12回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -349,6 +362,17 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
+  },
+  slimerace7 : {
+    title : '第7回スライムレース',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2024,0,10,12,0),
+    endTime : new Date(2024,0,22,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_LINEAR,
+    rankBorder : 100
   },
   slimerace6 : {
     title : '第6回スライムレース',
@@ -709,6 +733,30 @@ var HOLIDAYS = [
   new Date('2024/11/23'),
   new Date('2024/12/30'),
   new Date('2024/12/31'),
+  new Date('2025/1/1'),
+  new Date('2025/1/2'),
+  new Date('2025/1/3'),
+  new Date('2025/1/1'),
+  new Date('2025/1/13'),
+  new Date('2025/2/11'),
+  new Date('2025/2/23'),
+  new Date('2025/2/24'),
+  new Date('2025/3/20'),
+  new Date('2025/4/29'),
+  new Date('2025/5/3'),
+  new Date('2025/5/4'),
+  new Date('2025/5/5'),
+  new Date('2025/5/6'),
+  new Date('2025/7/21'),
+  new Date('2025/8/11'),
+  new Date('2025/9/15'),
+  new Date('2025/9/23'),
+  new Date('2025/10/13'),
+  new Date('2025/11/3'),
+  new Date('2025/11/23'),
+  new Date('2025/11/24'),
+  new Date('2025/12/30'),
+  new Date('2025/12/31'),
   ];
 
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
@@ -720,7 +768,7 @@ var DISPLAY_RANK_UPPER_INTERVAL = 10;
 var DISPLAY_RANK_LOWER_INTERVAL = 10;
 
 // キャラ個別画面で表示される履歴の最大数
-var DISPLAY_HISTORY_NUM = 4;
+var DISPLAY_HISTORY_NUM = 5;
 
 // レーダーの直近サンプリング数
 var RADAR_SAMPLE_NUM = 3;
@@ -734,9 +782,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "casinoraid",
-  round : 5,
-  race : "casinoraid5",
+  raceType : "daifugo",
+  round : 13,
+  race : "daifugo13",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
