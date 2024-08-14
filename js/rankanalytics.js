@@ -57,6 +57,7 @@ var RACE_TYPE_CONFIG_MAP = {
   fishing : {
     name : 'フィッシングコンテスト',
     rounds : [
+      {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
@@ -475,6 +476,17 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
+  fishing8 : {
+    title : '第8回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2024,7,14,12,0),
+    endTime : new Date(2024,8,2,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['最大ランキング','最小ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
+  },
   fishing7 : {
     title : '第7回フィッシングコンテスト',
     predictionType : PREDICTION_TYPE_RANGE,
@@ -806,9 +818,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 14,
-  race : "daifugo14",
+  raceType : "fishing",
+  round : 8,
+  race : "fishing8",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
