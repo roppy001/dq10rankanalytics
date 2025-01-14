@@ -50,6 +50,7 @@ var RACE_TYPE_CONFIG_MAP = {
   casinoraid : {
     name : 'カジノレイド',
     rounds : [
+      {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
       {id : 4,name : '第4回'},
       {id : 3,name : '第3回'},
@@ -443,6 +444,17 @@ var RACE_CONFIG_MAP = {
     updateType : UPDATE_TYPE_EIGHT_HOURS,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_LINEAR,
+    rankBorder : 100
+  },
+  casinoraid6 : {
+    title : '第6回カジノレイド',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('枚'),
+    beginTime : new Date(2025,0,15,12,0),
+    endTime : new Date(2025,0,27,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ポーカー','スロット','ルーレット','ビンゴ'],
+    borders : RACE_10_100_RANGE,
     rankBorder : 100
   },
   casinoraid5 : {
@@ -842,9 +854,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugom",
-  round : 7,
-  race : "daifugom7",
+  raceType : "casinoraid",
+  round : 6,
+  race : "casinoraid6",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
