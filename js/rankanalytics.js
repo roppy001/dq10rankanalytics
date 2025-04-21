@@ -44,6 +44,7 @@ var RACE_TYPE_CONFIG_MAP = {
   slimerace : {
     name : 'スライムレース',
     rounds : [
+      {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
       {id : 5,name : '第5回'}]
@@ -424,6 +425,17 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
+  },
+  slimerace8 : {
+    title : '第8回スライムレース',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2025,3,9,12,0),
+    endTime : new Date(2025,3,21,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_LINEAR,
+    rankBorder : 100
   },
   slimerace7 : {
     title : '第7回スライムレース',
@@ -866,9 +878,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 16,
-  race : "daifugo16",
+  raceType : "slimerace",
+  round : 8,
+  race : "slimerace8",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
