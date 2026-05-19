@@ -107,3 +107,17 @@ daifugo 以外のイベント（daifugom, fishing, slimerace, casinoraid, pencil
 - 開始日時・終了日時以外のフィールドは同イベントの最新エントリからコピー
 - title の `第N回` を自動インクリメント
 - 変更前にユーザーへ確認を行う
+
+### `/update-holidays`
+
+内閣府の公式祝日CSVを取得して `js/rankanalytics.js` の `HOLIDAYS` 配列を最新化するスキル。
+
+**引数:** なし
+
+**例:** `/update-holidays`
+
+実行すると以下を自動処理する:
+1. 内閣府CSVを取得・解析（https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv）
+2. 年末年始（12/30, 12/31, 1/2, 1/3）を各年に追加
+3. 差分をユーザーへ提示・確認後に HOLIDAYS 配列を置換
+4. rankanalytics.html のタイムスタンプを更新
