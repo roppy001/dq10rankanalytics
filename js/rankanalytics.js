@@ -13,6 +13,8 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugom : {
     name : '大富豪決定戦',
     rounds : [
+      {id : 9,name : '第9回'},
+      {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
       {id : 5,name : '第5回'},
@@ -24,6 +26,8 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 19,name : '第19回'},
+      {id : 18,name : '第18回'},
       {id : 17,name : '第17回'},
       {id : 16,name : '第16回'},
       {id : 15,name : '第15回'},
@@ -63,6 +67,7 @@ var RACE_TYPE_CONFIG_MAP = {
   fishing : {
     name : 'フィッシングコンテスト',
     rounds : [
+      {id : 9,name : '第9回'},
       {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
@@ -174,6 +179,28 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
+  daifugom9 : {
+    title : '第9回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,0,2,12,0),
+    endTime : new Date(2026,0,19,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugom8 : {
+    title : '第8回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2025,6,15,12,0),
+    endTime : new Date(2025,6,28,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugom7 : {
     title : '第7回大富豪決定戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -251,12 +278,34 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo19 : {
+    title : '第19回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2025,11,10,0,0),
+    endTime : new Date(2026,2,19,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
+  daifugo18 : {
+    title : '第18回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2025,7,27,0,0),
+    endTime : new Date(2025,11,11,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo17 : {
     title : '第17回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2025,4,14,0,0),
-    endTime : new Date(2025,7,21,0,0),
+    endTime : new Date(2025,7,28,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -547,6 +596,17 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['ポーカー','スロット','ルーレット'],
     borders : RACE_10_100_RANGE,
     rankBorder : 100
+  },
+  fishing9 : {
+    title : '第9回フィッシングコンテスト',
+    predictionType : PREDICTION_TYPE_RANGE,
+    numberFormatter : FISHING_FORMATTER,
+    beginTime : new Date(2025,10,5,12,0),
+    endTime : new Date(2025,10,25,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['最大ランキング','最小ランキング'],
+    borders : RACE_10_100_200_RANGE,
+    rankBorder : 200
   },
   fishing8 : {
     title : '第8回フィッシングコンテスト',
@@ -912,9 +972,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 17,
-  race : "daifugo17",
+  raceType : "daifugom",
+  round : 9,
+  race : "daifugom9",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
