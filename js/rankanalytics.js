@@ -26,6 +26,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 20,name : '第20回'},
       {id : 19,name : '第19回'},
       {id : 18,name : '第18回'},
       {id : 17,name : '第17回'},
@@ -278,12 +279,23 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo20 : {
+    title : '第20回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,2,25,0,0),
+    endTime : new Date(2026,6,2,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo19 : {
     title : '第19回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2025,11,10,0,0),
-    endTime : new Date(2026,2,19,0,0),
+    endTime : new Date(2026,2,26,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -972,9 +984,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugom",
-  round : 9,
-  race : "daifugom9",
+  raceType : "daifugo",
+  round : 20,
+  race : "daifugo20",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
