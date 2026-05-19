@@ -94,3 +94,16 @@ All libraries are vendored in `js/` and `css/` — do not import from CDNs.
 2. 既存最新エントリの `endTime` を更新
 3. 新ラウンドのエントリを `RACE_CONFIG_MAP` に追加
 4. `RACE_TYPE_CONFIG_MAP.daifugo.rounds` 先頭に新ラウンドを追加
+
+### `/add-event`
+
+daifugo 以外のイベント（daifugom, fishing, slimerace, casinoraid, pencil など）の新ラウンドを `js/rankanalytics.js` に追加するスキル。
+
+**引数:** `<eventType> <startDate[THH:MM]> <endDate[THH:MM]>`
+
+**例:** `/add-event daifugom 2026-07-01 2026-07-13`、`/add-event fishing 2026-08-05T12:00 2026-08-18T20:00`
+
+- 時刻省略時: 開始は当日 12:00（正午）、終了は翌日 04:00
+- 開始日時・終了日時以外のフィールドは同イベントの最新エントリからコピー
+- title の `第N回` を自動インクリメント
+- 変更前にユーザーへ確認を行う
