@@ -827,6 +827,7 @@ var HOLIDAYS = [
   new Date('2020/11/23'),
   new Date('2020/12/30'),
   new Date('2020/12/31'),
+
   new Date('2021/1/1'),
   new Date('2021/1/2'),
   new Date('2021/1/3'),
@@ -848,6 +849,7 @@ var HOLIDAYS = [
   new Date('2021/11/23'),
   new Date('2021/12/30'),
   new Date('2021/12/31'),
+
   new Date('2022/1/1'),
   new Date('2022/1/2'),
   new Date('2022/1/3'),
@@ -868,6 +870,7 @@ var HOLIDAYS = [
   new Date('2022/11/23'),
   new Date('2022/12/30'),
   new Date('2022/12/31'),
+
   new Date('2023/1/1'),
   new Date('2023/1/2'),
   new Date('2023/1/3'),
@@ -888,6 +891,7 @@ var HOLIDAYS = [
   new Date('2023/11/23'),
   new Date('2023/12/30'),
   new Date('2023/12/31'),
+
   new Date('2024/1/1'),
   new Date('2024/1/2'),
   new Date('2024/1/3'),
@@ -913,10 +917,10 @@ var HOLIDAYS = [
   new Date('2024/11/23'),
   new Date('2024/12/30'),
   new Date('2024/12/31'),
+
   new Date('2025/1/1'),
   new Date('2025/1/2'),
   new Date('2025/1/3'),
-  new Date('2025/1/1'),
   new Date('2025/1/13'),
   new Date('2025/2/11'),
   new Date('2025/2/23'),
@@ -937,6 +941,7 @@ var HOLIDAYS = [
   new Date('2025/11/24'),
   new Date('2025/12/30'),
   new Date('2025/12/31'),
+
   new Date('2026/1/1'),
   new Date('2026/1/2'),
   new Date('2026/1/3'),
@@ -959,6 +964,28 @@ var HOLIDAYS = [
   new Date('2026/11/23'),
   new Date('2026/12/30'),
   new Date('2026/12/31'),
+
+  new Date('2027/1/1'),
+  new Date('2027/1/2'),
+  new Date('2027/1/3'),
+  new Date('2027/1/11'),
+  new Date('2027/2/11'),
+  new Date('2027/2/23'),
+  new Date('2027/3/21'),
+  new Date('2027/3/22'),
+  new Date('2027/4/29'),
+  new Date('2027/5/3'),
+  new Date('2027/5/4'),
+  new Date('2027/5/5'),
+  new Date('2027/7/19'),
+  new Date('2027/8/11'),
+  new Date('2027/9/20'),
+  new Date('2027/9/23'),
+  new Date('2027/10/11'),
+  new Date('2027/11/3'),
+  new Date('2027/11/23'),
+  new Date('2027/12/30'),
+  new Date('2027/12/31'),
 ];
 
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
