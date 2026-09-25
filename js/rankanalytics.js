@@ -1047,9 +1047,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 21,
-  race : "daifugo21",
+  raceType : "slimerace",
+  round : 9,
+  race : "slimerace9",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
@@ -1998,14 +1998,29 @@ function reloadRaceData(){
   xhr.open('GET', 'json/'+ selection.race + '.json.gz?v='+Math.random().toString(32).substring(2), true);
   xhr.responseType = 'arraybuffer';
   xhr.onload = function () {
-    var e = pako.inflate(xhr.response, { to: 'string' });
+    if (xhr.status !== 200) {
+      console.error('レースデータが取得できませんでした: ' + selection.race + ' (status=' + xhr.status + ')');
+      return;
+    }
 
-    data = $.parseJSON(e);
+    var e, newData;
+    try {
+      e = pako.inflate(xhr.response, { to: 'string' });
+      newData = $.parseJSON(e);
+    } catch (ex) {
+      console.error('レースデータの解析に失敗しました: ' + selection.race, ex);
+      return;
+    }
+
+    data = newData;
 
     calculate();
 
     display();
   }
+  xhr.onerror = function () {
+    console.error('レースデータの取得に失敗しました(通信エラー): ' + selection.race);
+  };
   xhr.send();
 }
 
