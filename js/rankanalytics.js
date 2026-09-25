@@ -13,6 +13,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugom : {
     name : '大富豪決定戦',
     rounds : [
+      {id : 10,name : '第10回'},
       {id : 9,name : '第9回'},
       {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
@@ -26,6 +27,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 21,name : '第21回'},
       {id : 20,name : '第20回'},
       {id : 19,name : '第19回'},
       {id : 18,name : '第18回'},
@@ -50,6 +52,7 @@ var RACE_TYPE_CONFIG_MAP = {
   slimerace : {
     name : 'スライムレース',
     rounds : [
+      {id : 9,name : '第9回'},
       {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
@@ -180,6 +183,17 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
+  daifugom10 : {
+    title : '第10回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,6,9,12,0),
+    endTime : new Date(2026,6,27,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugom9 : {
     title : '第9回大富豪決定戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -279,12 +293,23 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo21 : {
+    title : '第21回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,5,25,0,0),
+    endTime : new Date(2026,9,15,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo20 : {
     title : '第20回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2026,2,25,0,0),
-    endTime : new Date(2026,6,2,0,0),
+    endTime : new Date(2026,5,26,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -498,6 +523,17 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
+  },
+  slimerace9 : {
+    title : '第9回スライムレース',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,8,30,12,0),
+    endTime : new Date(2026,9,13,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_LINEAR,
+    rankBorder : 100
   },
   slimerace8 : {
     title : '第8回スライムレース',
@@ -827,6 +863,7 @@ var HOLIDAYS = [
   new Date('2020/11/23'),
   new Date('2020/12/30'),
   new Date('2020/12/31'),
+
   new Date('2021/1/1'),
   new Date('2021/1/2'),
   new Date('2021/1/3'),
@@ -848,6 +885,7 @@ var HOLIDAYS = [
   new Date('2021/11/23'),
   new Date('2021/12/30'),
   new Date('2021/12/31'),
+
   new Date('2022/1/1'),
   new Date('2022/1/2'),
   new Date('2022/1/3'),
@@ -868,6 +906,7 @@ var HOLIDAYS = [
   new Date('2022/11/23'),
   new Date('2022/12/30'),
   new Date('2022/12/31'),
+
   new Date('2023/1/1'),
   new Date('2023/1/2'),
   new Date('2023/1/3'),
@@ -888,6 +927,7 @@ var HOLIDAYS = [
   new Date('2023/11/23'),
   new Date('2023/12/30'),
   new Date('2023/12/31'),
+
   new Date('2024/1/1'),
   new Date('2024/1/2'),
   new Date('2024/1/3'),
@@ -913,10 +953,10 @@ var HOLIDAYS = [
   new Date('2024/11/23'),
   new Date('2024/12/30'),
   new Date('2024/12/31'),
+
   new Date('2025/1/1'),
   new Date('2025/1/2'),
   new Date('2025/1/3'),
-  new Date('2025/1/1'),
   new Date('2025/1/13'),
   new Date('2025/2/11'),
   new Date('2025/2/23'),
@@ -937,6 +977,7 @@ var HOLIDAYS = [
   new Date('2025/11/24'),
   new Date('2025/12/30'),
   new Date('2025/12/31'),
+
   new Date('2026/1/1'),
   new Date('2026/1/2'),
   new Date('2026/1/3'),
@@ -959,6 +1000,28 @@ var HOLIDAYS = [
   new Date('2026/11/23'),
   new Date('2026/12/30'),
   new Date('2026/12/31'),
+
+  new Date('2027/1/1'),
+  new Date('2027/1/2'),
+  new Date('2027/1/3'),
+  new Date('2027/1/11'),
+  new Date('2027/2/11'),
+  new Date('2027/2/23'),
+  new Date('2027/3/21'),
+  new Date('2027/3/22'),
+  new Date('2027/4/29'),
+  new Date('2027/5/3'),
+  new Date('2027/5/4'),
+  new Date('2027/5/5'),
+  new Date('2027/7/19'),
+  new Date('2027/8/11'),
+  new Date('2027/9/20'),
+  new Date('2027/9/23'),
+  new Date('2027/10/11'),
+  new Date('2027/11/3'),
+  new Date('2027/11/23'),
+  new Date('2027/12/30'),
+  new Date('2027/12/31'),
 ];
 
 // ページ遷移の際、1位-(10+[この値])位 → 11位 - (20 + [この値])位というように
@@ -984,9 +1047,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 20,
-  race : "daifugo20",
+  raceType : "slimerace",
+  round : 9,
+  race : "slimerace9",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
@@ -1084,11 +1147,27 @@ function displayDashboard(){
     $('#border' + i + ' .borderName').text('');
     $('#border' + i + ' .latest').text('');
     $('#border' + i + ' .prediction').text('');
+    $('#aisummary' + i + ' .borderName').text('');
+    $('#aisummary' + i + ' .description').text('');
   }
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
 
-  var snapshotList = data.subraceList[selection.subrace].snapshotList;
+  var subrace = data.subraceList[selection.subrace];
+
+  var snapshotList = subrace.snapshotList;
+
+  var aiSummaryList = subrace.aiSummary;
+  if (aiSummaryList) {
+    for (var i = 0; i < aiSummaryList.length && i < 4; i++) {
+      var aiSummaryItem = aiSummaryList[i];
+      if (!aiSummaryItem) {
+        continue;
+      }
+      $('#aisummary' + i + ' .borderName').text(aiSummaryItem.borderName || '');
+      $('#aisummary' + i + ' .description').text(aiSummaryItem.summary || '');
+    }
+  }
 
   // 表示最下位ランクを計算
   var endRank=Math.min(
@@ -1935,14 +2014,29 @@ function reloadRaceData(){
   xhr.open('GET', 'json/'+ selection.race + '.json.gz?v='+Math.random().toString(32).substring(2), true);
   xhr.responseType = 'arraybuffer';
   xhr.onload = function () {
-    var e = pako.inflate(xhr.response, { to: 'string' });
+    if (xhr.status !== 200) {
+      console.error('レースデータが取得できませんでした: ' + selection.race + ' (status=' + xhr.status + ')');
+      return;
+    }
 
-    data = $.parseJSON(e);
+    var e, newData;
+    try {
+      e = pako.inflate(xhr.response, { to: 'string' });
+      newData = $.parseJSON(e);
+    } catch (ex) {
+      console.error('レースデータの解析に失敗しました: ' + selection.race, ex);
+      return;
+    }
+
+    data = newData;
 
     calculate();
 
     display();
   }
+  xhr.onerror = function () {
+    console.error('レースデータの取得に失敗しました(通信エラー): ' + selection.race);
+  };
   xhr.send();
 }
 
