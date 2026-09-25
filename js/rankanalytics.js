@@ -13,6 +13,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugom : {
     name : '大富豪決定戦',
     rounds : [
+      {id : 10,name : '第10回'},
       {id : 9,name : '第9回'},
       {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
@@ -26,6 +27,7 @@ var RACE_TYPE_CONFIG_MAP = {
   daifugo : {
     name : '大富豪段位戦',
     rounds : [
+      {id : 21,name : '第21回'},
       {id : 20,name : '第20回'},
       {id : 19,name : '第19回'},
       {id : 18,name : '第18回'},
@@ -50,6 +52,7 @@ var RACE_TYPE_CONFIG_MAP = {
   slimerace : {
     name : 'スライムレース',
     rounds : [
+      {id : 9,name : '第9回'},
       {id : 8,name : '第8回'},
       {id : 7,name : '第7回'},
       {id : 6,name : '第6回'},
@@ -180,6 +183,17 @@ var NORMAL_FORMATTER_GENERATOR = function(str){
 var FISHING_FORMATTER = function (x) { return (x * 0.1).toFixed(1) + 'cm';}
 
 var RACE_CONFIG_MAP = {
+  daifugom10 : {
+    title : '第10回大富豪決定戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,6,9,12,0),
+    endTime : new Date(2026,6,27,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugom9 : {
     title : '第9回大富豪決定戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
@@ -279,12 +293,23 @@ var RACE_CONFIG_MAP = {
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
   },
+  daifugo21 : {
+    title : '第21回大富豪段位戦ランキング',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,5,25,0,0),
+    endTime : new Date(2026,9,15,0,0),
+    updateType : UPDATE_TYPE_ONE_DAY,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_1000_LINEAR,
+    rankBorder : 1000
+  },
   daifugo20 : {
     title : '第20回大富豪段位戦ランキング',
     predictionType : PREDICTION_TYPE_LINEAR,
     numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
     beginTime : new Date(2026,2,25,0,0),
-    endTime : new Date(2026,6,2,0,0),
+    endTime : new Date(2026,5,26,0,0),
     updateType : UPDATE_TYPE_ONE_DAY,
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
@@ -498,6 +523,17 @@ var RACE_CONFIG_MAP = {
     subraceNames : ['ランキング'],
     borders : RACE_10_100_1000_LINEAR,
     rankBorder : 1000
+  },
+  slimerace9 : {
+    title : '第9回スライムレース',
+    predictionType : PREDICTION_TYPE_LINEAR,
+    numberFormatter : NORMAL_FORMATTER_GENERATOR('P'),
+    beginTime : new Date(2026,8,30,12,0),
+    endTime : new Date(2026,9,13,4,0),
+    updateType : UPDATE_TYPE_EIGHT_HOURS,
+    subraceNames : ['ランキング'],
+    borders : RACE_10_100_LINEAR,
+    rankBorder : 100
   },
   slimerace8 : {
     title : '第8回スライムレース',
@@ -1011,9 +1047,9 @@ var data;
 // 選択情報保持領域 初期選択状態を定義
 var initialSelection = {
   screen : 0,
-  raceType : "daifugo",
-  round : 20,
-  race : "daifugo20",
+  raceType : "slimerace",
+  round : 9,
+  race : "slimerace9",
   subrace : 0,
   targetRank : 1,
   targetRankInterval : 10,
@@ -1962,14 +1998,29 @@ function reloadRaceData(){
   xhr.open('GET', 'json/'+ selection.race + '.json.gz?v='+Math.random().toString(32).substring(2), true);
   xhr.responseType = 'arraybuffer';
   xhr.onload = function () {
-    var e = pako.inflate(xhr.response, { to: 'string' });
+    if (xhr.status !== 200) {
+      console.error('レースデータが取得できませんでした: ' + selection.race + ' (status=' + xhr.status + ')');
+      return;
+    }
 
-    data = $.parseJSON(e);
+    var e, newData;
+    try {
+      e = pako.inflate(xhr.response, { to: 'string' });
+      newData = $.parseJSON(e);
+    } catch (ex) {
+      console.error('レースデータの解析に失敗しました: ' + selection.race, ex);
+      return;
+    }
+
+    data = newData;
 
     calculate();
 
     display();
   }
+  xhr.onerror = function () {
+    console.error('レースデータの取得に失敗しました(通信エラー): ' + selection.race);
+  };
   xhr.send();
 }
 
