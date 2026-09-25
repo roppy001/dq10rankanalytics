@@ -1147,11 +1147,27 @@ function displayDashboard(){
     $('#border' + i + ' .borderName').text('');
     $('#border' + i + ' .latest').text('');
     $('#border' + i + ' .prediction').text('');
+    $('#aisummary' + i + ' .borderName').text('');
+    $('#aisummary' + i + ' .description').text('');
   }
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
 
-  var snapshotList = data.subraceList[selection.subrace].snapshotList;
+  var subrace = data.subraceList[selection.subrace];
+
+  var snapshotList = subrace.snapshotList;
+
+  var aiSummaryList = subrace.aiSummary;
+  if (aiSummaryList) {
+    for (var i = 0; i < aiSummaryList.length && i < 4; i++) {
+      var aiSummaryItem = aiSummaryList[i];
+      if (!aiSummaryItem) {
+        continue;
+      }
+      $('#aisummary' + i + ' .borderName').text(aiSummaryItem.borderName || '');
+      $('#aisummary' + i + ' .description').text(aiSummaryItem.summary || '');
+    }
+  }
 
   // 表示最下位ランクを計算
   var endRank=Math.min(
