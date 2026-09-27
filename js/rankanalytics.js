@@ -1785,17 +1785,27 @@ function displayDiffRank(){
     parentDom.append(newDom);
   }
 
-
-
 }
 
-function display(){
+function resetScreen(){
+  $('#warningScreen').addClass('ra-hidden');
   $('#dashboard').addClass('ra-hidden');
   $('#selectDashboard').removeClass('active');
   $('#character').addClass('ra-hidden');
   $('#selectCharacter').removeClass('active');
   $('#diffRank').addClass('ra-hidden');
   $('#selectDiffRank').removeClass('active');
+}
+
+function displayWarning(message){
+  resetScreen();
+  
+  $('#warningScreen').removeClass('ra-hidden');
+  $('#warningMessage').text(message);
+}
+
+function display(){
+  resetScreen();
 
   var raceConfig = RACE_CONFIG_MAP[selection.race];
   $('#raceTitle').text(raceConfig.title);
@@ -2016,6 +2026,7 @@ function reloadRaceData(){
   xhr.onload = function () {
     if (xhr.status !== 200) {
       console.error('レースデータが取得できませんでした: ' + selection.race + ' (status=' + xhr.status + ')');
+      displayWarning(RACE_CONFIG_MAP[selection.race].title + 'のレースデータが取得できませんでした');
       return;
     }
 
@@ -2025,6 +2036,7 @@ function reloadRaceData(){
       newData = $.parseJSON(e);
     } catch (ex) {
       console.error('レースデータの解析に失敗しました: ' + selection.race, ex);
+      displayWarning(RACE_CONFIG_MAP[selection.race].title + 'のレースデータの解析に失敗しました');
       return;
     }
 
@@ -2036,6 +2048,7 @@ function reloadRaceData(){
   }
   xhr.onerror = function () {
     console.error('レースデータの取得に失敗しました(通信エラー): ' + selection.race);
+    displayWarning(RACE_CONFIG_MAP[selection.race].title + 'のレースデータの取得に失敗しました');
   };
   xhr.send();
 }
